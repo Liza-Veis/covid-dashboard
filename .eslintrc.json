@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "linebreak-style": ["error", "windows"],
+    "no-tabs": [2, { "allowIndentationTabs": true }],
+    "object-curly-newline": [
+      2,
+      {
+        "ExportDeclaration": { "minProperties": 5 }
+      }
+    ]
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "extends": "airbnb-base/legacy"
+}
