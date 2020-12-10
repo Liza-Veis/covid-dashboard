@@ -5,6 +5,7 @@
 ```bash
 git clone https://github.com/Liza-Veis/covid-dashboard.git
 git checkout develop
+git cd covid-dashboard
 git checkout -b <task-name>
 ```
 
