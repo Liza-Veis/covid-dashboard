@@ -42,6 +42,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "chart.js": "^2.9.4",
+    "luxon": "^1.25.0",
     "normalize.css": "^8.0.1"
   }
 }

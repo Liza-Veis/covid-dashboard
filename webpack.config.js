@@ -24,8 +24,8 @@ const optimization = () => {
 };
 
 const filename = (ext) => {
-  const extention = ext ? ext : '[ext]';
-  return isDev ? `[name].${extention}` : `[name].[contenthash].${extention}`;
+  const extension = ext || '[ext]';
+  return isDev ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 };
 
 const cssLoaders = (extra) => {
@@ -99,6 +99,15 @@ module.exports = {
       minify: {
         collapseWhitespace: isProd
       }
+    }),
+    new HtmlWebpackPlugin({
+      template: './statistics.html',
+      inject: 'head',
+      scriptLoading: 'defer',
+      minify: {
+        collapseWhitespace: isProd
+      },
+      filename: 'statistics.html'
     }),
     new CopyPlugin({
       patterns: [
