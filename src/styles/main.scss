@@ -1,1 +1,107 @@
 @import '~normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap');
+
+$font-family: 'Nunito', sans-serif;
+
+$font-color: #c3c3c3;
+$body-bg-color: #13110d;
+$parts-bg-color: #2f2d28;
+
+$border: 1px solid #464646;
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 10px;
+  font-family: $font-family;
+  color: $font-color;
+  background-color: $body-bg-color;
+}
+
+.header {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $parts-bg-color;
+  border: $border;
+
+  &__title {
+    font-size: 1.5rem;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 1.5rem;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+.main {
+  width: 100%;
+  height: 100px; //fix bug with parts height in Chrome
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: calc(min(270px, 20%)) auto calc(min(400px, 30%));
+  flex-grow: 1;
+  grid-gap: 10px;
+  grid-template-areas:
+    'countriesList map statistics'
+    'countriesList map graph';
+}
+
+#countries-list {
+  grid-area: countriesList;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+#statistics {
+  grid-area: statistics;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+#graph {
+  grid-area: graph;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+#map {
+  grid-area: map;
+  background-image: url('../assets/images/map.png');
+  background-size: cover;
+  background-position: center;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+#search {
+  font-size: 1.125rem;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  border-radius: 0;
+}
