@@ -35,7 +35,7 @@
         }
         .data-tabs {
             height: 400px;
-            width: 100%;
+            width: 50%;
         }
         #death-data, #recovered-data {
             height: 300px;
@@ -72,6 +72,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 80%;
+            height: 500px;
+            margin: 0 auto;
+        }
+        .country-data-select {
+            width: 50%;
+            height: 400px;
+        }
+        .select-country {
+            margin-top: 20px;
+        }
+        .search-data {
+            display: none;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+        .search-data[data-show] {
+            display: block;
+        }
+        #search-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        *[data-hide] {
+            display: none;
         }
     </style>
 </head>
@@ -99,10 +125,16 @@
                     <div id="death-data"></div>
                 </div>
                 <div class="" id="recovered-content">
-                    <h2>Total covered by countries</h2>
+                    <h2>Total recovered by countries</h2>
                     <div id="recovered-data"></div>
                 </div>
             </div>
+            <div class="country-data-select" id="country-data-select">
+                <div class="country-data" id="country-data"></div>
+            </div>
+        </section>
+        <section id="search-section">
+            <input type="text" id='search'>
         </section>
       </main>
 </body>
