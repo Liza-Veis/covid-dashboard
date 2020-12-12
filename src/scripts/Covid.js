@@ -5,7 +5,7 @@ class Covid {
     totalDeathsSelector, totalRecoveredSelector) {
     this.baseUrl = 'https://api.covid19api.com/';
     this.isTotal = true;
-    this.isDivided = true;
+    this.isDivided = false;
     this.perHundredThousand = 100000;
     this.populationData = [];
     this.informer = informer;
@@ -24,7 +24,14 @@ class Covid {
     };
   }
 
+  resetSelectorsData() {
+    this.totalCasesSelector.innerHTML = '';
+    this.totalDeathsSelector.innerHTML = '';
+    this.totalRecoveredSelector.innerHTML = '';
+  }
+
   async setData() {
+    this.resetSelectorsData();
     const data = await this.getData();
     this.globalCasesSelector.innerHTML = data.global.TotalConfirmed;
     const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
@@ -33,6 +40,16 @@ class Covid {
     this.totalCasesSelector.appendChild(totalCasesFragment);
     this.totalDeathsSelector.appendChild(totalDeathsFragment);
     this.totalRecoveredSelector.appendChild(TotalRecoveredFragment);
+  }
+
+  async changeIsTotalState() {
+    this.isTotal = !this.isTotal;
+    await this.setData();
+  }
+
+  async changeIsDividedState() {
+    this.isDivided = !this.isDivided;
+    await this.setData();
   }
 
   async getPopulationData() {

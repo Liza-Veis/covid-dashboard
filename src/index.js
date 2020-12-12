@@ -9,6 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('countries-cases'), document.getElementById('death-data'),
     document.getElementById('recovered-data'));
   await covid.setData();
+
+  document.getElementById('total').addEventListener('click', async () => {
+    await covid.changeIsTotalState();
+  });
+  document.getElementById('divided').addEventListener('click', async () => {
+    await covid.changeIsDividedState();
+  });
   // document.getElementById('country-data-select').addEventListener('change', async (event) => {
   //   await setCountryData(event.target.value, 'country-data');
   // });
