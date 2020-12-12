@@ -24,8 +24,8 @@ const optimization = () => {
 };
 
 const filename = (ext) => {
-  const extention = ext ? ext : '[ext]';
-  return isDev ? `[name].${extention}` : `[name].[contenthash].${extention}`;
+  const extension = ext || '[ext]';
+  return isDev ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 };
 
 const cssLoaders = (extra) => {
