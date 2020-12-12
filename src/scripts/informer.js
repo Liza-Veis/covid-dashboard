@@ -1,4 +1,4 @@
-class CountryInfo {
+class informer {
   constructor() {
     this.url = '../assets/data/populationData.json';
     this.commonData = [];
@@ -32,4 +32,4 @@ class CountryInfo {
   }
 }
 
-export default CountryInfo;
+export default informer;
