@@ -1,8 +1,7 @@
 class Search {
-  constructor(covidDataMiner, inputSelector, dataWrapper, dataSelector) {
+  constructor(covidDataMiner, inputSelector, dataSelector) {
     this.covidDataMiner = covidDataMiner;
     this.inputSelector = inputSelector;
-    this.dataWrapper = dataWrapper;
     this.dataSelector = dataSelector;
   }
 
@@ -17,18 +16,8 @@ class Search {
     });
   }
 
-  async selectCountryHandler(event) {
-    if (event.target.classList.contains(this.dataSelector)) {
-      const country = event.target.getAttribute('data-country');
-      await this.covidDataMiner.setCountryData(country);
-      this.inputSelector.blur();
-    }
-  }
-
   async init() {
     this.inputSelector.addEventListener('input', this.inputHandler.bind(this));
-    this.dataWrapper.addEventListener('click', await this.selectCountryHandler.bind(this));
-    this.dataWrapper.appendChild(await this.covidDataMiner.createCountrySearchList(await this.covidDataMiner.getData(), 'wrapper', this.dataSelector));
   }
 }
 

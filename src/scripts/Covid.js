@@ -8,6 +8,7 @@ class Covid {
     this.baseUrl = 'https://api.covid19api.com/';
     this.isTotal = true;
     this.isDivided = false;
+    this.isHandled = false;
     this.selectedCountry = 'Belarus';
     this.perHundredThousand = 100000;
     this.populationData = [];
@@ -20,7 +21,6 @@ class Covid {
     this.countryDeathsSelector = countryDeathsSelector;
     this.countryRecoveredSelector = countryRecoveredSelector;
     this.countryNameSelector = countryNameSelector;
-    this.isHandled = false;
   }
 
   async getData() {
@@ -37,6 +37,9 @@ class Covid {
     const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
     const totalDeathsFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
     const TotalRecoveredFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
+    this.totalCasesSelector.innerHTML = '';
+    this.totalDeathsSelector.innerHTML = '';
+    this.totalRecoveredSelector.innerHTML = '';
     this.totalCasesSelector.appendChild(totalCasesFragment);
     this.totalDeathsSelector.appendChild(totalDeathsFragment);
     this.totalRecoveredSelector.appendChild(TotalRecoveredFragment);
@@ -54,6 +57,8 @@ class Covid {
       tabs.addEventListener('click', await this.countryListClickHandler.bind(this), false);
       this.isHandled = true;
     }
+    document.querySelector('#search').value = '';
+    document.querySelector('#search').dispatchEvent(new Event('input'));
   }
 
   async countryListClickHandler(event) {

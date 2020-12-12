@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     countriesList.deaths, countriesList.recovered,
     statistics.cases, statistics.deaths, statistics.recovered, statistics.countryName);
   await covid.init();
-  const searcher = new Search(covid, document.getElementById('search'), document.getElementById('search-section'), 'data-search');
-  console.log(searcher);
+  const searcher = new Search(covid, search, 'countries-list__item');
+  await searcher.init();
 
   document.querySelector('#period-switch').addEventListener('click', async function () {
     this.classList.toggle('active');
