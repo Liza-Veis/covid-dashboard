@@ -1,1 +1,266 @@
 @import '~normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap');
+
+$font-family: 'Nunito', sans-serif;
+
+$font-color: #c3c3c3;
+$body-bg-color: #13110d;
+$parts-bg-color: #2f2d28;
+
+$cases-color: #d32828;
+$deaths-color: $font-color;
+$recovered-color: #66c31d;
+$border-color: #464646;
+
+$border: 1px solid $border-color;
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 10px;
+  font-family: $font-family;
+  color: $font-color;
+  background-color: $body-bg-color;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  &__btn {
+    width: 40px;
+    height: 20px;
+    padding: 2px;
+    background-color: $border-color;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  &__circle {
+    width: 16px;
+    height: 16px;
+    background-color: $body-bg-color;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  &__title {
+    margin-left: 8px;
+  }
+  &.active {
+    .switch__btn {
+      background-color: $cases-color;
+    }
+    .switch__circle {
+      transform: translate(19px);
+      background-color: $font-color;
+    }
+  }
+}
+
+.header {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $parts-bg-color;
+  border: $border;
+
+  &__title {
+    font-size: 1.5rem;
+  }
+}
+
+.tabs {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  &__content {
+    height: calc(100% - 40px);
+    overflow: auto;
+  }
+}
+
+.tabs-nav {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 0.875rem;
+  border-bottom: $border;
+  cursor: pointer;
+  &__item {
+    flex-grow: 1;
+    padding: 10px;
+    background: $body-bg-color;
+    color: rgba($font-color, 0.7);
+    &.active {
+      background: $parts-bg-color;
+      border-right: $border;
+      border-left: $border;
+      color: $font-color;
+    }
+    &:first-child {
+      border-left: none;
+    }
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.tab {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+  &.active {
+    display: flex;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 1.5rem;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+.main {
+  width: 100%;
+  height: 100px; //fix bug with parts height in Chrome
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: calc(min(270px, 20%)) auto calc(min(400px, 30%));
+  grid-template-rows: 1fr 1fr;
+  flex-grow: 1;
+  grid-gap: 10px;
+  grid-template-areas:
+    'countriesList map statistics'
+    'countriesList map graph';
+}
+
+.countries-list {
+  grid-area: countriesList;
+  background-color: $parts-bg-color;
+  border: $border;
+
+  overflow: hidden;
+  &__item {
+    border-bottom: $border;
+    padding: 8px 10px;
+    font-size: 1.125rem;
+    cursor: pointer;
+  }
+  &__country-name {
+    margin-left: 8px;
+  }
+  [data-tab-content='cases'] .countries-list__number {
+    color: $cases-color;
+  }
+  [data-tab-content='deaths'] .countries-list__number {
+    color: $deaths-color;
+  }
+  [data-tab-content='recovered'] .countries-list__number {
+    color: $recovered-color;
+  }
+}
+
+.statistics {
+  grid-area: statistics;
+  background-color: $parts-bg-color;
+  border: $border;
+
+  display: flex;
+  flex-direction: column;
+  &__country-name {
+    padding: 12px 20px;
+    font-size: 2rem;
+  }
+  &__row {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: $border;
+    &:first-child {
+      border-top: $border;
+    }
+  }
+  &__title {
+    padding: 15px 0;
+    border-right: $border;
+    min-width: 115px;
+    font-size: 0.9375rem;
+  }
+  &__cases,
+  &__deaths,
+  &__recovered {
+    padding: 0 20px;
+    font-size: 1.5rem;
+  }
+  &__cases {
+    color: $cases-color;
+  }
+  &__deaths {
+    color: $deaths-color;
+  }
+  &__recovered {
+    color: $recovered-color;
+  }
+  &__switch {
+    &:last-child {
+      margin-left: 20px;
+    }
+  }
+  &__footer {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 15px 20px;
+  }
+}
+
+.graph {
+  grid-area: graph;
+  background-color: $parts-bg-color;
+  border: $border;
+
+  overflow: hidden;
+}
+
+.map {
+  grid-area: map;
+  background-image: url('../assets/images/map.png');
+  background-size: cover;
+  background-position: center;
+  background-color: $parts-bg-color;
+  border: $border;
+}
+
+#search {
+  font-size: 1.125rem;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  border-radius: 0;
+}
