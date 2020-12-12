@@ -1,2 +1,2 @@
 import './styles/main.scss';
-import './scripts/markup.js';
+import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
