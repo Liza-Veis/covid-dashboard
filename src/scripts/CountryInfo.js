@@ -15,7 +15,8 @@ class CountryInfo {
 
   async getDataByCountry(name) {
     const data = this.commonData.length ? this.commonData : await this.getAllData();
-    const targetObj = Object.assign({}, data.find((item) => item.name.toLowerCase() === name));
+    const targetObj = Object.assign({}, data.find((item) => item.name.toLowerCase()
+      === name.toLowerCase()));
     return targetObj;
   }
 

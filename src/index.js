@@ -5,8 +5,10 @@ import CountryInfo from './scripts/CountryInfo';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const informer = new CountryInfo();
-  const covid = new Covid(informer);
-  console.log(covid);
+  const covid = new Covid(informer, document.getElementById('global-cases'),
+    document.getElementById('countries-cases'), document.getElementById('death-data'),
+    document.getElementById('recovered-data'));
+  await covid.setData();
   // document.getElementById('country-data-select').addEventListener('change', async (event) => {
   //   await setCountryData(event.target.value, 'country-data');
   // });

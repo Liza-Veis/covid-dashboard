@@ -1,12 +1,18 @@
 // import { DateTime } from 'luxon';
 
 class Covid {
-  constructor(informer) {
+  constructor(informer, globalCasesSelector, totalCasesSelector,
+    totalDeathsSelector, totalRecoveredSelector) {
     this.baseUrl = 'https://api.covid19api.com/';
     this.isTotal = true;
-    this.isDivided = false;
+    this.isDivided = true;
     this.perHundredThousand = 100000;
+    this.populationData = [];
     this.informer = informer;
+    this.globalCasesSelector = globalCasesSelector;
+    this.totalCasesSelector = totalCasesSelector;
+    this.totalDeathsSelector = totalDeathsSelector;
+    this.totalRecoveredSelector = totalRecoveredSelector;
   }
 
   async getData() {
@@ -16,6 +22,24 @@ class Covid {
       global: data.Global,
       countries: data.Countries
     };
+  }
+
+  async setData() {
+    const data = await this.getData();
+    this.globalCasesSelector.innerHTML = data.global.TotalConfirmed;
+    const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
+    const totalDeathsFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
+    const TotalRecoveredFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
+    this.totalCasesSelector.appendChild(totalCasesFragment);
+    this.totalDeathsSelector.appendChild(totalDeathsFragment);
+    this.totalRecoveredSelector.appendChild(TotalRecoveredFragment);
+  }
+
+  async getPopulationData() {
+    if (!this.populationData.length) {
+      this.populationData = await this.informer.getAllData();
+    }
+    return this.populationData;
   }
 
   async getDataByCountry(name) {
@@ -29,16 +53,20 @@ class Covid {
   async createCountriesDataFragment(data, value) {
     const fragment = document.createDocumentFragment();
     const countries = data.countries.sort((a, b) => b[value] - a[value]);
+    const populationData = await this.getPopulationData();
     countries.forEach(async (item) => {
       const block = document.createElement('div');
-      const population = await this.informer.getCountryPopulation(item.Country);
+      let population = null;
+      if (this.isDivided) {
+        population = populationData.find((country) => country.name.toLowerCase()
+         === item.Country.toLowerCase()).population;
+      }
       block.innerHTML = `
           <span class="dangerous">${this.isDivided ? ((item[value] / population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
           <span class="country-name">${item.Country}</span>
           `;
       fragment.appendChild(block);
     });
-
     return fragment;
   }
 
