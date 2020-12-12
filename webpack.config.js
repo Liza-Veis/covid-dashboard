@@ -100,15 +100,6 @@ module.exports = {
         collapseWhitespace: isProd
       }
     }),
-    new HtmlWebpackPlugin({
-      template: './statistics.html',
-      inject: 'head',
-      scriptLoading: 'defer',
-      minify: {
-        collapseWhitespace: isProd
-      },
-      filename: 'statistics.html'
-    }),
     new CopyPlugin({
       patterns: [
         {

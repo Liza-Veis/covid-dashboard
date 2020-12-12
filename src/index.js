@@ -3,21 +3,25 @@ import './styles/main.scss';
 import Covid from './scripts/Covid';
 import Informer from './scripts/informer';
 import Search from './scripts/Search';
+import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const informer = new Informer();
-  const covid = new Covid(informer, document.getElementById('global-cases'),
-    document.getElementById('countries-cases'), document.getElementById('death-data'),
-    document.getElementById('recovered-data'));
-  await covid.setData();
+  const covid = new Covid(informer, undefined, countriesList.cases,
+    countriesList.deaths, countriesList.recovered,
+    statistics.cases, statistics.deaths, statistics.recovered, statistics.countryName);
+  await covid.init();
+  const searcher = new Search(covid, document.getElementById('search'), document.getElementById('search-section'), 'data-search');
+  console.log(searcher);
 
-  document.getElementById('total').addEventListener('click', async () => {
+  document.querySelector('#period-switch').addEventListener('click', async function () {
+    this.classList.toggle('active');
     await covid.changeIsTotalState();
   });
-  document.getElementById('divided').addEventListener('click', async () => {
+
+  document.querySelector('#data-display-switch').addEventListener('click', async function () {
+    this.classList.toggle('active');
     await covid.changeIsDividedState();
   });
-
-  const search = new Search(covid, document.getElementById('search'), document.getElementById('search-section'), 'data-search');
-  await search.init();
+  console.log(search, countriesList, statistics, graph, map);
 });

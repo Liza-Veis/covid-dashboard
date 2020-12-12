@@ -3,11 +3,12 @@
 
 class Covid {
   constructor(informer, globalCasesSelector, totalCasesSelector,
-    totalDeathsSelector, totalRecoveredSelector) {
+    totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
+    countryDeathsSelector, countryRecoveredSelector, countryNameSelector) {
     this.baseUrl = 'https://api.covid19api.com/';
     this.isTotal = true;
     this.isDivided = false;
-    this.selectedCountry = null;
+    this.selectedCountry = 'Belarus';
     this.perHundredThousand = 100000;
     this.populationData = [];
     this.informer = informer;
@@ -15,6 +16,11 @@ class Covid {
     this.totalCasesSelector = totalCasesSelector;
     this.totalDeathsSelector = totalDeathsSelector;
     this.totalRecoveredSelector = totalRecoveredSelector;
+    this.countryCasesSelector = countryCasesSelector;
+    this.countryDeathsSelector = countryDeathsSelector;
+    this.countryRecoveredSelector = countryRecoveredSelector;
+    this.countryNameSelector = countryNameSelector;
+    this.isHandled = false;
   }
 
   async getData() {
@@ -26,17 +32,8 @@ class Covid {
     };
   }
 
-  resetSelectorsData() {
-    this.totalCasesSelector.innerHTML = '';
-    this.totalDeathsSelector.innerHTML = '';
-    this.totalRecoveredSelector.innerHTML = '';
-  }
-
-  async setData() {
-    this.resetSelectorsData();
-    this.selectedCountry = null;
+  async setGlobalData() {
     const data = await this.getData();
-    this.globalCasesSelector.innerHTML = data.global.TotalConfirmed;
     const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
     const totalDeathsFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
     const TotalRecoveredFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
@@ -46,33 +43,46 @@ class Covid {
   }
 
   async setCountryData(country) {
-    this.resetSelectorsData();
-    const data = await this.getDataByCountry(country);
     this.selectedCountry = country;
-    const totalCasesFragment = await this.createCountryFragment(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
-    const totalDeathsFragment = await this.createCountryFragment(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
-    const TotalRecoveredFragment = await this.createCountryFragment(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
-    this.totalCasesSelector.appendChild(totalCasesFragment);
-    this.totalDeathsSelector.appendChild(totalDeathsFragment);
-    this.totalRecoveredSelector.appendChild(TotalRecoveredFragment);
+    const data = await this.getDataByCountry(this.selectedCountry);
+    const tabs = document.querySelector('.tabs__content');
+    this.countryCasesSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'TotalConfirmed' : 'NewConfirmed');
+    this.countryDeathsSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
+    this.countryRecoveredSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
+    this.countryNameSelector.innerHTML = this.selectedCountry;
+    if (!this.isHandled) {
+      tabs.addEventListener('click', await this.countryListClickHandler.bind(this), false);
+      this.isHandled = true;
+    }
+  }
+
+  async countryListClickHandler(event) {
+    if (event.target.classList.contains('countries-list__item')) {
+      const countryName = event.target.querySelector('.countries-list__country-name').textContent;
+      await this.setCountryData(countryName);
+    } else if (event.target.classList.contains('countries-list__country-name')) {
+      await this.setCountryData(event.target.textContent);
+    } else if (event.target.classList.contains('countries-list__number')) {
+      const countryName = event.target.parentNode.querySelector('.countries-list__country-name').textContent;
+      await this.setCountryData(countryName);
+    }
+  }
+
+  async init() {
+    await this.setGlobalData();
+    await this.setCountryData(this.selectedCountry);
   }
 
   async changeIsTotalState() {
     this.isTotal = !this.isTotal;
-    if (this.selectedCountry) {
-      await this.setCountryData(this.selectedCountry);
-    } else {
-      await this.setData();
-    }
+    await this.setGlobalData();
+    await this.setCountryData(this.selectedCountry);
   }
 
   async changeIsDividedState() {
     this.isDivided = !this.isDivided;
-    if (this.selectedCountry) {
-      await this.setCountryData(this.selectedCountry);
-    } else {
-      await this.setData();
-    }
+    await this.setGlobalData();
+    await this.setCountryData(this.selectedCountry);
   }
 
   async getPopulationData() {
@@ -96,30 +106,26 @@ class Covid {
     const populationData = await this.getPopulationData();
     countries.forEach((item) => {
       const block = document.createElement('div');
+      block.className = 'countries-list__item';
+      block.setAttribute('data-country', item.Country);
       let population = null;
       if (this.isDivided) {
         population = populationData.find((country) => country.name.toLowerCase()
          === item.Country.toLowerCase()).population;
       }
       block.innerHTML = `
-          <span class="dangerous">${this.isDivided ? ((item[value] / population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
-          <span class="country-name">${item.Country}</span>
+          <span class="countries-list__number">${this.isDivided ? ((item[value] / population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
+          <span class="countries-list__country-name">${item.Country}</span>
           `;
-      fragment.appendChild(block);
+      fragment.append(block);
     });
     return fragment;
   }
 
-  async createCountryFragment(country, value) {
-    const block = document.createElement('div');
+  async getRefactorCountryData(country, value) {
     const populationData = (await this.getPopulationData()).find((item) => item.name.toLowerCase()
     === country.Country.toLowerCase()).population;
-    block.innerHTML = `
-    <span class="dangerous">${this.isDivided ? ((country[value] / populationData) * this.perHundredThousand).toFixed(2) : country[value] }</span>
-    <span class="country-name">${country.Country}</span>
-    `;
-
-    return block;
+    return this.isDivided ? ((country[value] / populationData) * this.perHundredThousand).toFixed(2) : country[value];
   }
 
   createCountrySelectList(data, selectClassName, optionClassName) {
@@ -152,40 +158,6 @@ class Covid {
 
     return block;
   }
-
-  // Закомментировал так как не будем использовать дополнительное поле. Удалю на этапе связки с интерфейсом.
-  // async createSearchAndSelectResultCountryFragment(name, blockClassList = 'country-data', titleClassList = 'title') {
-  //   const data = await this.getDataByCountry(name);
-  //   const countryPopulation = await this.informer.getCountryPopulation(name);
-  //   const fragment = document.createDocumentFragment();
-  //   const dataBlock = document.createElement('div');
-  //   dataBlock.className = blockClassList;
-
-  //   let confirmedSick;
-  //   let deathSick;
-  //   let recoveredSick;
-
-  //   if (this.isTotal) {
-  //     confirmedSick = data.TotalConfirmed;
-  //     deathSick = data.TotalDeaths;
-  //     recoveredSick = data.TotalRecovered;
-  //   } else {
-  //     confirmedSick = data.NewConfirmed;
-  //     deathSick = data.NewDeaths;
-  //     recoveredSick = data.NewDeaths;
-  //   }
-
-  //   dataBlock.innerHTML = `
-  //   <h2 class=${titleClassList}>Confirmed: ${this.isDivided ? ((confirmedSick / countryPopulation) * this.perHundredThousand).toFixed(2)
-  // : confirmedSick}</h2>
-  //   <h2 class=${titleClassList}>Deaths: ${this.isDivided ? ((deathSick / countryPopulation) * this.perHundredThousand).toFixed(2)
-  // : deathSick}</h2>
-  //   <h2 class=${titleClassList}>Recovered: ${this.isDivided ? ((recoveredSick / countryPopulation) * this.perHundredThousand).toFixed(2)
-  // : recoveredSick}</h2>
-  //   `;
-  //   fragment.appendChild(dataBlock);
-  //   return fragment;
-  // }
 }
 
 export default Covid;
