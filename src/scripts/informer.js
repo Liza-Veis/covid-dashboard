@@ -28,7 +28,7 @@ class informer {
 
   async getCountryFlag(name) {
     const data = this.commonData.length ? this.commonData : await this.getAllData();
-    return data.find((item) => item.name.toLowerCase() === name).flag;
+    return data.find((item) => item.name.toLowerCase() === name.toLowerCase()).flag;
   }
 }
 

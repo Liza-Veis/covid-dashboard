@@ -183,6 +183,17 @@ body {
   [data-tab-content='recovered'] .countries-list__number {
     color: $recovered-color;
   }
+  &__flag {
+    width: 30px;
+    height: 20px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 15px;
+    position: relative;
+    top: 3px;
+  }
 }
 
 .statistics {

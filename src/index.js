@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import './styles/main.scss';
-import CovidDataMiner from './scripts/Covid';
-import Informer from './scripts/informer';
+import CovidDataMiner from './scripts/CovidDataMiner';
+import Informer from './scripts/Informer';
 import Search from './scripts/Search';
 import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
 

@@ -52,6 +52,8 @@ class CovidDataMiner {
     this.countryDeathsSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'TotalDeaths' : 'NewDeaths');
     this.countryRecoveredSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'TotalRecovered' : 'NewRecovered');
     this.countryNameSelector.innerHTML = this.selectedCountry;
+    // this.countryNameSelector.style.backgroundImage =
+    // `url(${await this.informer.getCountryFlag(country)})`;
     if (!this.isHandled) {
       tabs.addEventListener('click', await this.countryListClickHandler.bind(this), false);
       this.isHandled = true;
@@ -66,7 +68,8 @@ class CovidDataMiner {
       await this.setCountryData(countryName);
     } else if (event.target.classList.contains('countries-list__country-name')) {
       await this.setCountryData(event.target.textContent);
-    } else if (event.target.classList.contains('countries-list__number')) {
+    } else if (event.target.classList.contains('countries-list__number')
+    || event.target.classList.contains('countries-list__flag')) {
       const countryName = event.target.parentNode.querySelector('.countries-list__country-name').textContent;
       await this.setCountryData(countryName);
     }
@@ -79,14 +82,12 @@ class CovidDataMiner {
 
   async changeIsTotalState() {
     this.isTotal = !this.isTotal;
-    await this.setGlobalData();
-    await this.setCountryData(this.selectedCountry);
+    await this.init();
   }
 
   async changeIsDividedState() {
     this.isDivided = !this.isDivided;
-    await this.setGlobalData();
-    await this.setCountryData(this.selectedCountry);
+    await this.init();
   }
 
   async getPopulationData() {
@@ -112,14 +113,12 @@ class CovidDataMiner {
       const block = document.createElement('div');
       block.className = 'countries-list__item';
       block.setAttribute('data-country', item.Country);
-      let population = null;
-      if (this.isDivided) {
-        population = populationData.find((country) => country.name.toLowerCase()
-         === item.Country.toLowerCase()).population;
-      }
+      const countryData = populationData.find((country) => country.name.toLowerCase()
+      === item.Country.toLowerCase());
       block.innerHTML = `
-          <span class="countries-list__number">${this.isDivided ? ((item[value] / population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
+          <span class="countries-list__number">${this.isDivided ? ((item[value] / countryData.population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
           <span class="countries-list__country-name">${item.Country}</span>
+          <div class="countries-list__flag" style="background-image: url(${countryData.flag})"></div>
           `;
       fragment.append(block);
     });
@@ -131,37 +130,6 @@ class CovidDataMiner {
     === country.Country.toLowerCase()).population;
     return this.isDivided ? ((country[value] / populationData)
     * this.perHundredThousand).toFixed(2) : country[value];
-  }
-
-  createCountrySelectList(data, selectClassName, optionClassName) {
-    const select = document.createElement('select');
-    select.className = selectClassName;
-
-    data.forEach((item) => {
-      const option = document.createElement('option');
-      option.className = optionClassName;
-      option.textContent = item.Country;
-      option.value = item.Country;
-      select.appendChild(option);
-    });
-
-    return select;
-  }
-
-  createCountrySearchList(data, wrapperClass, dataBlockClass) {
-    const block = document.createElement('div');
-    block.classList.add(wrapperClass);
-    const countries = data.countries;
-
-    countries.forEach((item) => {
-      const dataBlock = document.createElement('div');
-      dataBlock.classList.add(dataBlockClass);
-      dataBlock.textContent = item.Country;
-      dataBlock.setAttribute('data-country', item.Country);
-      block.appendChild(dataBlock);
-    });
-
-    return block;
   }
 }
 
