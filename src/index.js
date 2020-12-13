@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
 import './styles/main.scss';
-import Covid from './scripts/Covid';
+import CovidDataMiner from './scripts/Covid';
 import Informer from './scripts/informer';
 import Search from './scripts/Search';
 import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const informer = new Informer();
-  const covid = new Covid(informer, undefined, countriesList.cases,
+  const covid = new CovidDataMiner(informer, undefined, countriesList.cases,
     countriesList.deaths, countriesList.recovered,
     statistics.cases, statistics.deaths, statistics.recovered, statistics.countryName);
   await covid.init();

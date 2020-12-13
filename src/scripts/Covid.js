@@ -1,7 +1,6 @@
-/* eslint-disable max-len */
 // import { DateTime } from 'luxon';
 
-class Covid {
+class CovidDataMiner {
   constructor(informer, globalCasesSelector, totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
     countryDeathsSelector, countryRecoveredSelector, countryNameSelector) {
@@ -130,7 +129,8 @@ class Covid {
   async getRefactorCountryData(country, value) {
     const populationData = (await this.getPopulationData()).find((item) => item.name.toLowerCase()
     === country.Country.toLowerCase()).population;
-    return this.isDivided ? ((country[value] / populationData) * this.perHundredThousand).toFixed(2) : country[value];
+    return this.isDivided ? ((country[value] / populationData)
+    * this.perHundredThousand).toFixed(2) : country[value];
   }
 
   createCountrySelectList(data, selectClassName, optionClassName) {
@@ -165,4 +165,4 @@ class Covid {
   }
 }
 
-export default Covid;
+export default CovidDataMiner;
