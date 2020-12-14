@@ -34,14 +34,9 @@ class DataChart {
     return this.data;
   }
 
-  async changeChartData() {
-    if (this.currentIndex === this.chartParams.length - 1) {
-      this.currentIndex = 0;
-    } else {
-      this.currentIndex += 1;
-    }
+  async changeChartData(value) {
     const globalData = await this.getGlobalData();
-    const dataArray = (Object.entries(globalData[this.chartParams[this.currentIndex]]));
+    const dataArray = (Object.entries(globalData[value]));
     const dataValues = [];
     const dataLabels = [];
     dataArray.forEach((item) => {
@@ -50,13 +45,13 @@ class DataChart {
     });
     this.chart.data.datasets[0].data = dataValues;
     this.chart.data.labels = dataLabels;
-    this.chart.options.title.text = `${this.titles[this.currentIndex]}`;
+    this.chart.options.title.text = `${this.titles[this.chartParams.indexOf(value)]}`;
     this.chart.update();
   }
 
   async init() {
     const allData = await this.getGlobalData();
-    const dataArray = (Object.entries(allData[this.chartParams[this.currentIndex]]));
+    const dataArray = (Object.entries(allData.cases));
     const dataValues = [];
     const dataLabels = [];
     dataArray.forEach((item) => {
@@ -76,27 +71,26 @@ class DataChart {
       options: {
         title: {
           display: true,
-          text: `${this.titles[this.currentIndex]}`
+          text: `${this.titles[0]}`
         },
-        label: 'Cases',
+        legend: {
+          labels: ''
+        },
         scales: {
           xAxes: [{
             stacked: true
           }],
           yAxes: [{
-            stacked: true,
             display: true,
             ticks: {
               beginAtZero: false,
-              stepSize: 10000,
-              min: 1000000,
-              maxTicksLimit: 12
+              stepSize: 20000,
+              maxTicksLimit: 5
             }
           }]
         }
       }
     });
-    console.log(this.chart);
   }
 }
 

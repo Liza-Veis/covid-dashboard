@@ -213,8 +213,6 @@ const statistics = new Statistics();
 const countriesList = new CountriesList();
 const graph = new Graph();
 
-graph.onOptionChange((value) => console.log(value));
-
 const search = create('input', null, 'search', ['type', 'text']);
 
 header.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
