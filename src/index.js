@@ -4,6 +4,7 @@ import Covid from './scripts/Covid';
 import Informer from './scripts/informer';
 import Search from './scripts/Search';
 import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
+import interactiveMap from'./scripts/map';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const informer = new Informer();
@@ -24,4 +25,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     await covid.changeIsDividedState();
   });
   console.log(search, countriesList, statistics, graph, map);
+  interactiveMap();
 });

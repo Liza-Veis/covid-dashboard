@@ -250,7 +250,7 @@ body {
 
 .map {
   grid-area: map;
-  background-image: url('../assets/images/map.png');
+//   background-image: url('../assets/images/map.png');
   background-size: cover;
   background-position: center;
   background-color: $parts-bg-color;
@@ -268,3 +268,5 @@ body {
 [data-hide] {
   display: none;
 }
+
+@import './map.scss';
