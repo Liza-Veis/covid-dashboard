@@ -198,9 +198,6 @@ body {
       border-bottom: none;
     }
   }
-  &__country-name {
-    //  margin-left: 8px;
-  }
   &__flag {
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg');
     width: 29px;
@@ -225,6 +222,17 @@ body {
   }
   [data-tab-content='recovered'] .countries-list__number {
     color: $recovered-color;
+  }
+  &__flag {
+    width: 30px;
+    height: 20px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 15px;
+    position: relative;
+    top: 3px;
   }
 }
 
@@ -289,6 +297,66 @@ body {
   border: $border;
 
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+  }
+  &__btn {
+    margin: 0 20px;
+    cursor: pointer;
+    border: 0 solid transparent;
+    outline: none;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0;
+    border-top-width: 7px;
+    border-bottom-width: 7px;
+    &--left {
+      border-right: 7px solid $font-color;
+    }
+    &--right {
+      border-left: 7px solid $font-color;
+    }
+  }
+  &__select {
+    flex-grow: 1;
+    position: relative;
+    max-width: 200px;
+    width: 100%;
+    text-align: center;
+  }
+  &__list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    bottom: 100%;
+    list-style: none;
+    text-align: left;
+    background: lighten($body-bg-color, 5%);
+    border: $border;
+    &.active {
+      display: block;
+    }
+  }
+  &__option {
+    padding: 8px 15px;
+    border-bottom: $border;
+    cursor: pointer;
+    &:last-child {
+      border: none;
+    }
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    &--current:hover {
+      background-color: transparent;
+    }
+  }
 }
 
 .map {

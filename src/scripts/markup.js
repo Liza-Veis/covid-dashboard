@@ -122,13 +122,86 @@ function CountriesList() {
 
 function Graph() {
   this.elem = create('div', 'graph');
-  this.cases = create('div');
-  this.deaths = create('div');
-  this.recovered = create('div');
+  this.select = create('div', 'graph__select', null, ['data-value', 'cases']);
+  this.currentOption = create('div', 'graph__option');
+  this.canvas = create('canvas', null, 'chart');
 
-  const tabs = createTabs(this.cases, this.deaths, this.recovered);
-  tabs.classList.add('graph__tabs');
-  this.elem.append(tabs);
+  this.onOptionChange = (func) => {
+    if (func) {
+      this.onOptionChange = () => func(this.select.dataset.value);
+    }
+  };
+
+  const graphFooter = create('div', 'graph__footer');
+  const btnLeft = create('button', 'graph__btn');
+  const btnRight = create('button', 'graph__btn');
+  const list = create('ul', 'graph__list');
+
+  const cases = create('li', 'graph__option', null, ['data-value', 'cases']);
+  const deaths = create('li', 'graph__option', null, ['data-value', 'deaths']);
+  const recovered = create('li', 'graph__option', null, ['data-value', 'recovered']);
+
+  this.currentOption.classList.add('graph__option--current');
+  btnLeft.classList.add('graph__btn--left');
+  btnRight.classList.add('graph__btn--right');
+
+  const options = [cases, deaths, recovered];
+
+  const capitalize = (str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
+
+  options.forEach((elem) => {
+    const option = elem;
+    option.textContent = capitalize(elem.dataset.value);
+  });
+  this.currentOption.textContent = capitalize(this.select.dataset.value);
+
+  const changeOption = (option) => {
+    const value = option.dataset.value;
+    if (this.select.dataset.value === value) return;
+    this.currentOption.textContent = capitalize(value);
+    this.select.dataset.value = value;
+    this.onOptionChange();
+  };
+
+  const getNextOption = (next) => {
+    const curIdx = options.findIndex((elem) => elem.dataset.value === this.select.dataset.value);
+    let idx = next ? (curIdx + 1) % options.length : curIdx - 1;
+    if (idx < 0) idx = options.length + idx;
+    return options[idx];
+  };
+
+  btnLeft.addEventListener('click', () => {
+    const option = getNextOption(false);
+    changeOption(option);
+  });
+
+  btnRight.addEventListener('click', () => {
+    const option = getNextOption(true);
+    changeOption(option);
+  });
+
+  list.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('graph__option')) return;
+    changeOption(e.target);
+  });
+
+  function toggleList() {
+    list.classList.toggle('active');
+  }
+
+  this.currentOption.addEventListener('click', () => toggleList());
+
+  document.addEventListener('click', (e) => {
+    if (e.target !== this.currentOption && list.classList.contains('active')) {
+      toggleList();
+      document.onclick = false;
+    }
+  });
+
+  list.append(cases, deaths, recovered);
+  this.select.append(list, this.currentOption);
+  graphFooter.append(btnLeft, this.select, btnRight);
+  this.elem.append(this.canvas, graphFooter);
 }
 
 const header = create('header', 'header');
