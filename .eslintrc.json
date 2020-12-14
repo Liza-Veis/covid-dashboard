@@ -2,7 +2,8 @@
   "rules": {
     "linebreak-style": ["error", "windows"],
     "no-tabs": [2, { "allowIndentationTabs": true }],
-    "class-methods-use-this":"off",
+    "class-methods-use-this": "off",
+    "no-unused-vars": "off",
     "object-curly-newline": [
       2,
       {

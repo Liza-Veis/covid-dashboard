@@ -1,5 +1,3 @@
-// import { DateTime } from 'luxon';
-
 class CovidDataMiner {
   constructor(informer, globalCasesSelector, totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
@@ -116,9 +114,9 @@ class CovidDataMiner {
       const countryData = populationData.find((country) => country.name.toLowerCase()
       === item.Country.toLowerCase());
       block.innerHTML = `
-          <span class="countries-list__number">${this.isDivided ? ((item[value] / countryData.population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
           <span class="countries-list__country-name">${item.Country}</span>
           <div class="countries-list__flag" style="background-image: url(${countryData.flag})"></div>
+          <span class="countries-list__number">${this.isDivided ? ((item[value] / countryData.population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
           `;
       fragment.append(block);
     });
