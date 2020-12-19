@@ -1,14 +1,15 @@
 class CovidDataMiner {
   constructor(totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
-    countryDeathsSelector, countryRecoveredSelector, countryNameSelector) {
-    this.baseUrl = 'https://corona.lmao.ninja/v3/covid-19/countries';
+    countryDeathsSelector, countryRecoveredSelector, countryNameSelector, chart, graph) {
+    this.baseUrl = 'https://disease.sh/v3/covid-19/countries';
     this.isTotal = true;
     this.isDivided = false;
     this.isHandled = false;
     this.selectedCountryIso3 = 'BLR';
     this.perHundredThousand = 100000;
     this.populationData = [];
+    this.lastUpdated = null;
     this.totalCasesSelector = totalCasesSelector;
     this.totalDeathsSelector = totalDeathsSelector;
     this.totalRecoveredSelector = totalRecoveredSelector;
@@ -16,12 +17,31 @@ class CovidDataMiner {
     this.countryDeathsSelector = countryDeathsSelector;
     this.countryRecoveredSelector = countryRecoveredSelector;
     this.countryNameSelector = countryNameSelector;
+    this.chart = chart;
+    this.graph = graph;
   }
 
   async getData() {
     const response = await fetch(this.baseUrl);
     const data = await response.json();
     return data;
+  }
+
+  async setLastUpdate() {
+    const data = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
+    this.lastUpdated = data.updated;
+  }
+
+  async updateData() {
+    const candidate = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
+    console.log(candidate, 'checked');
+    if (candidate.updated !== this.lastUpdated) {
+      this.init();
+    }
+  }
+
+  resetTableHtml() {
+
   }
 
   async setGlobalData() {
@@ -45,12 +65,16 @@ class CovidDataMiner {
     this.countryDeathsSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'deaths' : 'todayDeaths');
     this.countryRecoveredSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'recovered' : 'todayRecovered');
     this.countryNameSelector.innerHTML = data.country;
+    this.countryNameSelector.setAttribute('data-iso3', this.selectedCountryIso3);
     if (!this.isHandled) {
       tabs.addEventListener('click', await this.countryListClickHandler.bind(this), false);
       this.isHandled = true;
     }
     document.querySelector('#search').value = '';
     document.querySelector('#search').dispatchEvent(new Event('input'));
+    await this.chart.init();
+    document.querySelector('.graph__select').setAttribute('data-value', 'cases');
+    document.querySelector('.graph__option.graph__option--current').textContent = 'Cases';
   }
 
   async countryListClickHandler(event) {
@@ -64,22 +88,28 @@ class CovidDataMiner {
   }
 
   async init() {
+    await this.setLastUpdate();
     await this.setGlobalData();
     await this.setCountryData(this.selectedCountryIso3);
+    setInterval(async () => {
+      await this.updateData();
+    }, 600000);
   }
 
   async changeIsTotalState() {
     this.isTotal = !this.isTotal;
-    await this.init();
+    await this.setGlobalData();
+    await this.setCountryData(this.selectedCountryIso3);
   }
 
   async changeIsDividedState() {
     this.isDivided = !this.isDivided;
-    await this.init();
+    await this.setGlobalData();
+    await this.setCountryData(this.selectedCountryIso3);
   }
 
   async getDataByCountry(iso3) {
-    const countryData = await (await fetch(`https://corona.lmao.ninja/v3/covid-19/countries/${iso3}`)).json();
+    const countryData = await (await fetch(`https://disease.sh/v3/covid-19/countries/${iso3}`)).json();
     return countryData;
   }
 

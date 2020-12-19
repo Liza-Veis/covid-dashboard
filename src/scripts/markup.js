@@ -140,12 +140,15 @@ function Graph() {
   const cases = create('li', 'graph__option', null, ['data-value', 'cases']);
   const deaths = create('li', 'graph__option', null, ['data-value', 'deaths']);
   const recovered = create('li', 'graph__option', null, ['data-value', 'recovered']);
+  const daily = create('li', 'graph__option', null, ['data-value', 'daily']);
+  const countryTotal = create('li', 'graph__option', null, ['data-value', 'country total']);
+  const countryDaily = create('li', 'graph__option', null, ['data-value', 'country daily']);
 
   this.currentOption.classList.add('graph__option--current');
   btnLeft.classList.add('graph__btn--left');
   btnRight.classList.add('graph__btn--right');
 
-  const options = [cases, deaths, recovered];
+  const options = [cases, deaths, recovered, daily, countryTotal, countryDaily];
 
   const capitalize = (str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
 
@@ -198,7 +201,7 @@ function Graph() {
     }
   });
 
-  list.append(cases, deaths, recovered);
+  list.append(cases, deaths, recovered, daily, countryTotal, countryDaily);
   this.select.append(list, this.currentOption);
   graphFooter.append(btnLeft, this.select, btnRight);
   this.elem.append(this.canvas, graphFooter);
