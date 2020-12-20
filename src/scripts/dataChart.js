@@ -122,6 +122,7 @@ class DataChart {
   }
 
   async init() {
+    if (this.chart) this.chart.destroy();
     const allData = await this.getGlobalData();
     const dataArray = (Object.entries(allData.cases));
     const dataValues = [];

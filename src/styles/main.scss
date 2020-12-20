@@ -193,8 +193,8 @@ body {
   grid-area: countriesList;
   background-color: $parts-bg-color;
   border: $border;
+  position: relative;
 
-  overflow: hidden;
   &__item {
     border-bottom: $border;
     padding: 5px 10px;
@@ -246,6 +246,7 @@ body {
   grid-area: statistics;
   background-color: $parts-bg-color;
   border: $border;
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -301,8 +302,7 @@ body {
   grid-area: graph;
   background-color: $parts-bg-color;
   border: $border;
-
-  overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -372,6 +372,7 @@ body {
   background-position: center;
   background-color: $parts-bg-color;
   border: $border;
+  position: relative;
 }
 
 #search {
@@ -415,6 +416,7 @@ body {
     position: absolute;
     top: 32px;
     right: 0;
+    z-index: 2;
   }
 
   &__item {
@@ -438,6 +440,7 @@ body {
     top: 53px;
     right: 185px;
     max-height: 500px;
+    z-index: 2;
   }
 }
 
@@ -475,5 +478,28 @@ body {
   &__date {
     grid-area: pubDate;
     margin-left: 10px;
+  }
+}
+
+.fullscreen {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  background-color:$cases-color;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(25%, -25%);
+
+  &.active {
+    transform: translate(0, 0);
+  }
+
+  & > img {
+    width: 16px;
+    height: 16px;
   }
 }

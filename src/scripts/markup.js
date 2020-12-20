@@ -90,6 +90,8 @@ function Statistics() {
   const casesTitle = create('div', 'statistics__title');
   const deathsTitle = create('div', 'statistics__title');
   const recoveredTitle = create('div', 'statistics__title');
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
 
   casesTitle.textContent = 'Cases';
   deathsTitle.textContent = 'Deaths';
@@ -106,7 +108,7 @@ function Statistics() {
 
   statisticsContent.append(casesRow, deathsRow, recoveredRow);
   statisticsFooter.append(this.periodSwitch, this.dataDisplaySwitch);
-  this.elem.append(this.countryName, statisticsContent, statisticsFooter);
+  this.elem.append(this.countryName, statisticsContent, statisticsFooter, fullScreener);
 }
 
 function CountriesList() {
@@ -116,8 +118,10 @@ function CountriesList() {
   this.recovered = create('div');
 
   const tabs = createTabs(this.cases, this.deaths, this.recovered);
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
   tabs.classList.add('countries-list__tabs');
-  this.elem.append(tabs);
+  this.elem.append(tabs, fullScreener);
 }
 
 function Graph() {
@@ -136,13 +140,14 @@ function Graph() {
   const btnLeft = create('button', 'graph__btn');
   const btnRight = create('button', 'graph__btn');
   const list = create('ul', 'graph__list');
-
   const cases = create('li', 'graph__option', null, ['data-value', 'cases']);
   const deaths = create('li', 'graph__option', null, ['data-value', 'deaths']);
   const recovered = create('li', 'graph__option', null, ['data-value', 'recovered']);
   const daily = create('li', 'graph__option', null, ['data-value', 'daily']);
   const countryTotal = create('li', 'graph__option', null, ['data-value', 'country total']);
   const countryDaily = create('li', 'graph__option', null, ['data-value', 'country daily']);
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
 
   this.currentOption.classList.add('graph__option--current');
   btnLeft.classList.add('graph__btn--left');
@@ -204,7 +209,7 @@ function Graph() {
   list.append(cases, deaths, recovered, daily, countryTotal, countryDaily);
   this.select.append(list, this.currentOption);
   graphFooter.append(btnLeft, this.select, btnRight);
-  this.elem.append(this.canvas, graphFooter);
+  this.elem.append(this.canvas, graphFooter, fullScreener);
 }
 
 function Header() {
@@ -232,6 +237,9 @@ const container = create('main', 'main');
 const footer = create('footer', 'footer');
 
 const map = create('div', 'map');
+const fullScreener = create('div', 'fullscreen');
+fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
+map.append(fullScreener);
 const statistics = new Statistics();
 const countriesList = new CountriesList();
 const graph = new Graph();

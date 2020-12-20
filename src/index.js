@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import './styles/main.scss';
 import CovidDataMiner from './scripts/CovidDataMiner';
 import Search from './scripts/Search';
@@ -41,6 +42,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   header.news.addEventListener('click', async () => {
     header.newsList.classList.toggle('active');
   });
-  // const newsList = await news.createNewsList();
-  // header.newsBlockWrapper.append(newsList);
+
+  document.querySelectorAll('.fullscreen').forEach((item) => {
+    item.addEventListener('click', () => {
+      if (!item.classList.contains('active')) {
+        item.parentNode.requestFullscreen();
+        item.classList.add('active');
+        item.querySelector('.open').setAttribute('data-hide', '');
+        item.querySelector('.close').removeAttribute('data-hide');
+      } else {
+        document.exitFullscreen();
+        item.classList.remove('active');
+        item.querySelector('.open').removeAttribute('data-hide');
+        item.querySelector('.close').setAttribute('data-hide', '');
+      }
+    });
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      const item = document.querySelector('.fullscreen.active');
+      item.querySelector('.open').removeAttribute('data-hide');
+      item.querySelector('.close').setAttribute('data-hide', '');
+      item.classList.remove('active');
+    }
+  });
 });
