@@ -6,7 +6,6 @@ import InteractiveMap from './scripts/InteractiveMap';
 import News from './scripts/News';
 import { header, countriesList, statistics, graph, map } from './scripts/markup.js';
 
-
 document.addEventListener('DOMContentLoaded', async () => {
   const chart = new DataChart(graph.canvas);
   const interactiveMap = new InteractiveMap(map);
@@ -21,15 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     chart,
     graph
   );
- const searcher = new Search(search, 'countries-list__item');
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const chart = new DataChart(graph.canvas);
-  const covid = new CovidDataMiner(countriesList.cases,
-    countriesList.deaths, countriesList.recovered,
-    statistics.cases, statistics.deaths, statistics.recovered, statistics.countryName, chart,
-    graph);
   const searcher = new Search(header.search, 'countries-list__item');
   const news = new News();
   await covid.init();

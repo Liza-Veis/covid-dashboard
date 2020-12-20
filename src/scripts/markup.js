@@ -131,14 +131,12 @@ function CountriesList() {
 
   tabsContent.append(this.cases, this.deaths, this.recovered);
   tabsNav.append(casesTab, deathsTab, recoveredTab);
-  this.tabs.append(tabsNav, tabsContent);
-  this.elem.append(this.tabs);
-=======
-  const tabs = createTabs(this.cases, this.deaths, this.recovered);
+
   const fullScreener = create('div', 'fullscreen');
   fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
-  tabs.classList.add('countries-list__tabs');
-  this.elem.append(tabs, fullScreener);
+
+  this.tabs.append(tabsNav, tabsContent);
+  this.elem.append(this.tabs, fullScreener);
 }
 
 function Graph() {
