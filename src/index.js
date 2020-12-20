@@ -6,6 +6,7 @@ import { search, countriesList, statistics, graph, map } from './scripts/markup.
 import InteractiveMap from './scripts/InteractiveMap';
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const chart = new DataChart(graph.canvas);
   const covid = new CovidDataMiner(
     countriesList.cases,
     countriesList.deaths,
@@ -13,11 +14,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     statistics.cases,
     statistics.deaths,
     statistics.recovered,
-    statistics.countryName
+    statistics.countryName,
+    chart,
+    graph
   );
+  const searcher = new Search(search, 'countries-list__item');
   await covid.init();
-  const searcher = new Search(covid, search, 'countries-list__item');
   await searcher.init();
+  graph.onOptionChange(async (value) => {
+    await chart.getDataByValue(value);
+  });
 
   document.querySelector('#period-switch').addEventListener('click', async function () {
     this.classList.toggle('active');
@@ -28,8 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     this.classList.toggle('active');
     await covid.changeIsDividedState();
   });
-
-  const chart = new DataChart(graph.canvas);
-  await chart.init();
-  graph.onOptionChange((value) => chart.changeChartData(value.toLowerCase()));
+  window.graph = graph;
+  console.log(graph);
 });

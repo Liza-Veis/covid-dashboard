@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Chart from 'chart.js';
 import { DateTime } from 'luxon';
 
@@ -6,47 +7,113 @@ class DataChart {
     this.canvas = canvas;
     this.url = 'https://disease.sh/v3/covid-19/historical/all';
     this.startDate = '2020-03-01T00:00:00Z';
-    this.currentDate = this.getCurrentDayDate();
+    this.lastUpdated = null;
     this.titles = ['Total confirmed', 'Total deaths', 'Total recovered'];
     this.chartParams = ['cases', 'deaths', 'recovered'];
+    this.bgColors = ['rgba(247, 202, 24, 1)', 'rgba(246, 36, 89, 1)', 'rgba(35, 203, 167, 1)'];
     this.data = [];
-    this.currentIndex = 0;
+    this.dailyData = [];
     this.chart = null;
   }
 
-  getCurrentDayDate() {
-    const today = DateTime.local().set({
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0
-    });
-    return today.toISODate();
-  }
-
   async getGlobalData() {
-    const candidate = this.getCurrentDayDate();
-    if (this.currentDate !== candidate || !this.data.length) {
+    const candidate = await this.getCandidate();
+    if (this.lastUpdated !== candidate || !this.data.length) {
       const response = await fetch(this.url);
       const data = await response.json();
       this.data = data;
+      this.lastUpdated = data.updated;
     }
     return this.data;
   }
 
-  async changeChartData(value) {
-    const globalData = await this.getGlobalData();
-    const dataArray = (Object.entries(globalData[value]));
-    const dataValues = [];
-    const dataLabels = [];
-    dataArray.forEach((item) => {
-      dataLabels.push(item[0].slice(0, 5));
-      dataValues.push(item[1]);
-    });
-    this.chart.data.datasets[0].data = dataValues;
-    this.chart.data.labels = dataLabels;
-    this.chart.options.title.text = `${this.titles[this.chartParams.indexOf(value)]}`;
-    this.chart.update();
+  async getDailyData() {
+    const candidate = await this.getCandidate();
+    if (this.lastUpdated !== candidate || !this.data.length) {
+      const response = await fetch('https://disease.sh/v3/covid-19/all');
+      const data = await response.json();
+      this.dailyData = [data.todayCases, data.todayDeaths, data.todayRecovered];
+    }
+    return this.dailyData;
+  }
+
+  async getDataByValue(value) {
+    this.chart.destroy();
+    if (value === 'country total' || value === 'country daily') {
+      const country = document.querySelector('.statistics__country-name');
+      const response = await fetch(`https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`);
+      const data = await response.json();
+      let dataForUpdate = null;
+      if (value === 'country total') {
+        dataForUpdate = [data.cases, data.deaths, data.recovered];
+      } else {
+        dataForUpdate = [data.todayCases, data.todayDeaths, data.todayRecovered];
+      }
+      this.chart = new Chart(this.canvas, {
+        type: 'horizontalBar',
+        data: {
+          labels: this.chartParams,
+          datasets: [{
+            data: dataForUpdate,
+            backgroundColor: this.bgColors
+          }],
+          options: this.options
+        }
+      });
+      this.chart.options.title.text = country.textContent;
+      this.chart.options.scales.yAxes[0].ticks.beginAtZero = true;
+    } else if (value === 'daily') {
+      const dataForUpdate = await this.getDailyData();
+      this.chart = new Chart(this.canvas, {
+        type: 'horizontalBar',
+        data: {
+          labels: this.chartParams,
+          datasets: [{
+            data: dataForUpdate,
+            backgroundColor: this.bgColors
+          }],
+          options: this.options
+        }
+      });
+      this.chart.options.title.text = 'Daily cases';
+    } else {
+      const data = await this.getGlobalData();
+      const dataArray = (Object.entries(data[value]));
+      const dataValues = [];
+      const dataLabels = [];
+      const index = this.chartParams.indexOf(value);
+      dataArray.forEach((item) => {
+        dataLabels.push(item[0].slice(0, 5));
+        dataValues.push(item[1]);
+      });
+      this.chart = new Chart(this.canvas, {
+        type: 'bar',
+        data: {
+          labels: dataLabels,
+          datasets: [{
+            data: dataValues,
+            backgroundColor: this.bgColors[index]
+          }]
+        },
+        options: this.options
+      });
+      this.chart.options.title.text = this.titles[index];
+    }
+    this.chart.options.title.display = true;
+    this.chart.options.legend.display = false;
+  }
+
+  async getCandidate() {
+    const candidate = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
+    return candidate.updated;
+  }
+
+  async updateData() {
+    const candidate = await this.getCandidate();
+    if (candidate !== this.lastUpdated) {
+      clearInterval(this.interval);
+      this.init();
+    }
   }
 
   async init() {
@@ -64,8 +131,7 @@ class DataChart {
         labels: dataLabels,
         datasets: [{
           data: dataValues,
-          backgroundColor:
-          'rgba(255, 99, 132, 1)'
+          backgroundColor: this.bgColors[0]
         }]
       },
       options: {
@@ -84,13 +150,17 @@ class DataChart {
             display: true,
             ticks: {
               beginAtZero: false,
-              stepSize: 20000,
-              maxTicksLimit: 5
+              stepSize: 5000,
+              maxTicksLimit: 12
             }
           }]
         }
       }
     });
+    this.interval = setInterval(async () => {
+      await this.updateData();
+    }, 600000);
+    this.options = Object.assign({}, this.chart.options);
   }
 }
 
