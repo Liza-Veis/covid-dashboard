@@ -109,7 +109,11 @@ class CovidDataMiner {
 
   async createCountriesDataFragment(data, value) {
     const fragment = document.createDocumentFragment();
-    const countries = data.sort((a, b) => b[value] - a[value]);
+    const countries = this.isDivided ? data.map((item) => {
+      const result = ((item[value] / item.population) * this.perHundredThousand).toFixed(2);
+      item[value] = result === 'Infinity' ? 0 : result;
+      return item;
+    }).sort((a, b) => b[value] - a[value]) : data.sort((a, b) => b[value] - a[value]);
     countries.forEach((item) => {
       const block = document.createElement('div');
       block.className = 'countries-list__item';
@@ -117,7 +121,7 @@ class CovidDataMiner {
       block.innerHTML = `
           <span class="countries-list__country-name">${item.country}</span>
           <div class="countries-list__flag" style="background-image: url(${item.countryInfo.flag})"></div>
-          <span class="countries-list__number">${this.isDivided ? ((item[value] / item.population) * this.perHundredThousand).toFixed(2) : item[value] }</span>
+          <span class="countries-list__number">${item[value] }</span>
           `;
       fragment.append(block);
     });

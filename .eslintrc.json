@@ -4,6 +4,7 @@
     "no-tabs": [2, { "allowIndentationTabs": true }],
     "class-methods-use-this": "off",
     "no-unused-vars": "off",
+    "no-param-reassign":"off",
     "func-names": "off",
     "object-curly-newline": [
       2,
