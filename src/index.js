@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import './styles/main.scss';
 import CovidDataMiner from './scripts/CovidDataMiner';
 import Search from './scripts/Search';
