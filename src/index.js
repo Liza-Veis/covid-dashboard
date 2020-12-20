@@ -3,7 +3,7 @@ import CovidDataMiner from './scripts/CovidDataMiner';
 import Search from './scripts/Search';
 import DataChart from './scripts/DataChart';
 import { search, countriesList, statistics, graph, map } from './scripts/markup.js';
-import interactiveMap from './scripts/map';
+import InteractiveMap from './scripts/InteractiveMap';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const covid = new CovidDataMiner(

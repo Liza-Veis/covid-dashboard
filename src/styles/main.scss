@@ -14,6 +14,60 @@ $border-color: #464646;
 
 $border: 1px solid $border-color;
 
+@mixin select {
+  &__btn {
+    margin: 0 20px;
+    cursor: pointer;
+    border: 0 solid transparent;
+    outline: none;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0;
+    border-top-width: 7px;
+    border-bottom-width: 7px;
+    &--left {
+      border-right: 7px solid $font-color;
+    }
+    &--right {
+      border-left: 7px solid $font-color;
+    }
+  }
+  &__select {
+    flex-grow: 1;
+    position: relative;
+    max-width: 200px;
+    width: 100%;
+    text-align: center;
+  }
+  &__list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    bottom: 100%;
+    list-style: none;
+    text-align: left;
+    background: lighten($body-bg-color, 5%);
+    border: $border;
+    &.active {
+      display: block;
+    }
+  }
+  &__option {
+    padding: 8px 15px;
+    border-bottom: $border;
+    cursor: pointer;
+    &:last-child {
+      border: none;
+    }
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    &--current:hover {
+      background-color: transparent;
+    }
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -306,66 +360,38 @@ body {
     text-align: center;
     align-items: center;
   }
-  &__btn {
-    margin: 0 20px;
-    cursor: pointer;
-    border: 0 solid transparent;
-    outline: none;
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0;
-    border-top-width: 7px;
-    border-bottom-width: 7px;
-    &--left {
-      border-right: 7px solid $font-color;
-    }
-    &--right {
-      border-left: 7px solid $font-color;
-    }
-  }
-  &__select {
-    flex-grow: 1;
-    position: relative;
-    max-width: 200px;
-    width: 100%;
-    text-align: center;
-  }
-  &__list {
-    display: none;
-    position: absolute;
-    width: 100%;
-    bottom: 100%;
-    list-style: none;
-    text-align: left;
-    background: lighten($body-bg-color, 5%);
-    border: $border;
-    &.active {
-      display: block;
-    }
-  }
-  &__option {
-    padding: 8px 15px;
-    border-bottom: $border;
-    cursor: pointer;
-    &:last-child {
-      border: none;
-    }
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    &--current:hover {
-      background-color: transparent;
-    }
-  }
+  @include select();
 }
 
 .map {
   grid-area: map;
-//   background-image: url('../assets/images/map.png');
   background-size: cover;
   background-position: center;
   background-color: $parts-bg-color;
   border: $border;
+  @include select();
+  &__nav {
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+    background: $parts-bg-color;
+    border: 2px solid $border-color;
+  }
+  &__select {
+    display: flex;
+    justify-content: center;
+  }
+  &__list {
+    bottom: 0;
+    transform: translateY(100%);
+    min-width: 200px;
+  }
+  &__btn {
+    margin: 0 15px;
+  }
+  &__option:last-child {
+    width: 100%;
+  }
 }
 
 #search {
