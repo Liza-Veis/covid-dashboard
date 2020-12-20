@@ -472,9 +472,6 @@ body {
     text-align: center;
     color: $cases-color;
   }
-  // &__description {
-  //   grid-area: description;
-  // }
   &__date {
     grid-area: pubDate;
     margin-left: 10px;
@@ -493,6 +490,8 @@ body {
   justify-content: center;
   align-items: center;
   transform: translate(25%, -25%);
+  transition: all 0.5s ease-in;
+  cursor: pointer;
 
   &.active {
     transform: translate(0, 0);
