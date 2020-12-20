@@ -160,6 +160,12 @@ body {
   &__title {
     font-size: 1.5rem;
   }
+  &__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
 }
 
 .tabs {
@@ -241,8 +247,8 @@ body {
   grid-area: countriesList;
   background-color: $parts-bg-color;
   border: $border;
+  position: relative;
 
-  overflow: hidden;
   &__item {
     border-bottom: $border;
     padding: 5px 10px;
@@ -294,6 +300,7 @@ body {
   grid-area: statistics;
   background-color: $parts-bg-color;
   border: $border;
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -349,8 +356,7 @@ body {
   grid-area: graph;
   background-color: $parts-bg-color;
   border: $border;
-
-  overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -392,10 +398,12 @@ body {
   &__option:last-child {
     width: 100%;
   }
+  position: relative;
 }
 
 #search {
   font-size: 1.125rem;
+  height: 30px;
   padding: 5px 10px;
   border: none;
   outline: none;
@@ -404,6 +412,121 @@ body {
 
 [data-hide] {
   display: none;
+}
+
+.menu-button {
+  cursor: pointer;
+  margin-left: 10px;
+  height: 32px;
+}
+
+.menu-icon {
+  width: 32px;
+}
+
+.news-wrapper {
+  position: absolute;
+  top: 0;
+  max-height: 500px;
+  overflow-y: scroll;
+  background-color: $body-bg-color;
+  transition: all 0.5s ease-in-out;
+}
+
+.menu-list {
+  list-style-type: none;
+  display: none;
+
+  &.active {
+    display: block;
+    position: absolute;
+    top: 32px;
+    right: 0;
+    z-index: 2;
+  }
+
+  &__item {
+    padding: 10px;
+    min-width: 150px;
+    background: #13110d;
+    color: $font-color;
+    cursor: pointer;
+    text-align: center;
+  }
+}
+
+.news-list {
+  display: none;
+  background: $body-bg-color;
+  overflow-y: scroll;
+
+  &.active {
+    display: block;
+    position: absolute;
+    top: 53px;
+    right: 185px;
+    max-height: 500px;
+    z-index: 2;
+  }
+}
+
+.news-link {
+  text-decoration: none;
+  color: $font-color;
+}
+
+.news-block {
+  display: grid;
+  width: 320px;
+  height: 300px;
+  grid-template-areas: "title title"
+                       "image image"
+                       "pubDate pubDate";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 100px 150px 50px;
+  align-items: center;
+  border: 1px solid $border-color;
+  background-color: $parts-bg-color;
+  margin-bottom: 10px;
+  &__image {
+    grid-area: image;
+    width: 80%;
+    margin: 0 auto;
+  }
+  &__title {
+    grid-area: title;
+    text-align: center;
+    color: $cases-color;
+  }
+  &__date {
+    grid-area: pubDate;
+    margin-left: 10px;
+  }
+}
+
+.fullscreen {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  background-color:$cases-color;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(25%, -25%);
+  transition: all 0.5s ease-in;
+  cursor: pointer;
+
+  &.active {
+    transform: translate(0, 0);
+  }
+
+  & > img {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @import './map.scss';

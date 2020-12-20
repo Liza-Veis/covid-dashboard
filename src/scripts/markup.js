@@ -36,6 +36,8 @@ function Statistics() {
   const casesTitle = create('div', 'statistics__title');
   const deathsTitle = create('div', 'statistics__title');
   const recoveredTitle = create('div', 'statistics__title');
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
 
   casesTitle.textContent = 'Cases';
   deathsTitle.textContent = 'Deaths';
@@ -52,7 +54,7 @@ function Statistics() {
 
   statisticsContent.append(casesRow, deathsRow, recoveredRow);
   statisticsFooter.append(this.periodSwitch, this.dataDisplaySwitch);
-  this.elem.append(this.countryName, statisticsContent, statisticsFooter);
+  this.elem.append(this.countryName, statisticsContent, statisticsFooter, fullScreener);
 }
 
 function CountriesList() {
@@ -131,6 +133,12 @@ function CountriesList() {
   tabsNav.append(casesTab, deathsTab, recoveredTab);
   this.tabs.append(tabsNav, tabsContent);
   this.elem.append(this.tabs);
+=======
+  const tabs = createTabs(this.cases, this.deaths, this.recovered);
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
+  tabs.classList.add('countries-list__tabs');
+  this.elem.append(tabs, fullScreener);
 }
 
 function Graph() {
@@ -151,13 +159,14 @@ function Graph() {
   const btnLeft = create('button', 'graph__btn');
   const btnRight = create('button', 'graph__btn');
   const list = create('ul', 'graph__list');
-
   const cases = create('li', 'graph__option', null, ['data-value', 'cases']);
   const deaths = create('li', 'graph__option', null, ['data-value', 'deaths']);
   const recovered = create('li', 'graph__option', null, ['data-value', 'recovered']);
   const daily = create('li', 'graph__option', null, ['data-value', 'daily']);
   const countryTotal = create('li', 'graph__option', null, ['data-value', 'country total']);
   const countryDaily = create('li', 'graph__option', null, ['data-value', 'country daily']);
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
 
   this.currentOption.classList.add('graph__option--current');
   btnLeft.classList.add('graph__btn--left');
@@ -218,26 +227,45 @@ function Graph() {
   list.append(cases, deaths, recovered, daily, countryTotal, countryDaily);
   this.select.append(list, this.currentOption);
   graphFooter.append(btnLeft, this.select, btnRight);
-  this.elem.append(this.canvas, graphFooter);
+  this.elem.append(this.canvas, graphFooter, fullScreener);
 }
 
-const header = create('header', 'header');
+function Header() {
+  this.elem = create('header', 'header');
+  this.search = create('input', null, 'search', ['type', 'text']);
+  this.nav = create('nav', 'header__nav');
+  this.menuBtn = create('div', 'menu-button');
+  this.menuList = create('ul', 'menu-list');
+  this.news = create('li', 'menu-list__item');
+  this.newsList = create('div', 'news-list');
+  const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
+
+  this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
+  this.news.textContent = 'Last news';
+  this.menuBtn.append(burgerImage);
+  this.menuList.append(this.news);
+  this.nav.append(this.search);
+  this.nav.append(this.menuBtn);
+  this.nav.append(this.menuList);
+  this.elem.append(this.nav);
+  this.elem.append(this.newsList);
+}
+
 const container = create('main', 'main');
 const footer = create('footer', 'footer');
 
 const map = create('div', 'map');
+const fullScreener = create('div', 'fullscreen');
+fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
+map.append(fullScreener);
 const statistics = new Statistics();
 const countriesList = new CountriesList();
 const graph = new Graph();
-
-const search = create('input', null, 'search', ['type', 'text']);
-
-header.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
-header.append(search);
+const header = new Header();
 
 footer.textContent = 'Footer';
 
 container.append(countriesList.elem, map, statistics.elem, graph.elem);
-document.body.append(header, container, footer);
+document.body.append(header.elem, container, footer);
 
-export { search, countriesList, statistics, graph, map };
+export { header, countriesList, statistics, graph, map };
