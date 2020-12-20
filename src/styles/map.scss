@@ -63,6 +63,7 @@
   }
   &__value {
     margin-left: 5px;
+    white-space: nowrap;
   }
 
   &.active .legend__content {

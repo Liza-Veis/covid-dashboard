@@ -18,60 +18,6 @@ function createSwitch(classname, id, title) {
   return elem;
 }
 
-function createTabs(casesItem, deathsItem, recoveredItem) {
-  const tabs = create('div', 'tabs');
-  const tabsNav = create('div', 'tabs__nav');
-  const tabsContent = create('div', 'tabs__content');
-
-  const casesTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'cases']);
-  const deathsTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'deaths']);
-  const recoveredTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'recovered']);
-
-  tabsNav.classList.add('tabs-nav');
-
-  casesItem.classList.add('active');
-  casesTab.classList.add('active');
-
-  casesItem.classList.add('tab');
-  deathsItem.classList.add('tab');
-  recoveredItem.classList.add('tab');
-
-  casesItem.setAttribute('data-tab-content', 'cases');
-  deathsItem.setAttribute('data-tab-content', 'deaths');
-  recoveredItem.setAttribute('data-tab-content', 'recovered');
-
-  casesTab.textContent = 'Cases';
-  deathsTab.textContent = 'Deaths';
-  recoveredTab.textContent = 'Recovered';
-
-  function selectTabContent(tabName) {
-    const tab = tabsContent.querySelector(`[data-tab-content="${tabName}"]`);
-    const tabsItems = [...tabsContent.querySelectorAll('.tab')];
-    tabsItems.forEach((elem) => elem.classList.remove('active'));
-    tab.classList.add('active');
-  }
-
-  function selectTabNav(e) {
-    if (e.target.dataset.tabName) {
-      const navItems = [...tabsNav.querySelectorAll('.tabs-nav__item')];
-      navItems.forEach((elem) => {
-        elem.classList.remove('active');
-      });
-      e.target.classList.add('active');
-      const tabName = e.target.dataset.tabName;
-      selectTabContent(tabName);
-    }
-  }
-
-  tabsNav.addEventListener('click', selectTabNav);
-
-  tabsContent.append(casesItem, deathsItem, recoveredItem);
-  tabsNav.append(casesTab, deathsTab, recoveredTab);
-  tabs.append(tabsNav, tabsContent);
-
-  return tabs;
-}
-
 function Statistics() {
   this.elem = create('div', 'statistics');
   this.countryName = create('div', 'statistics__country-name');
@@ -114,10 +60,77 @@ function CountriesList() {
   this.cases = create('div');
   this.deaths = create('div');
   this.recovered = create('div');
+  this.tabs = create('div', 'tabs');
 
-  const tabs = createTabs(this.cases, this.deaths, this.recovered);
-  tabs.classList.add('countries-list__tabs');
-  this.elem.append(tabs);
+  this.selectTabNav = undefined;
+
+  this.onTabChange = (func) => {
+    if (func) {
+      this.onTabChange = () => func(this.tabs.dataset.value);
+    }
+  };
+
+  const tabsNav = create('div', 'tabs__nav');
+  const tabsContent = create('div', 'tabs__content');
+
+  const casesTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'cases']);
+  const deathsTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'deaths']);
+  const recoveredTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'recovered']);
+
+  this.tabs.classList.add('countries-list__tabs');
+  tabsNav.classList.add('tabs-nav');
+
+  this.tabs.dataset.value = 'cases';
+  this.cases.classList.add('active');
+  casesTab.classList.add('active');
+
+  this.cases.classList.add('tab');
+  this.deaths.classList.add('tab');
+  this.recovered.classList.add('tab');
+
+  this.cases.setAttribute('data-tab-content', 'cases');
+  this.deaths.setAttribute('data-tab-content', 'deaths');
+  this.recovered.setAttribute('data-tab-content', 'recovered');
+
+  casesTab.textContent = 'Cases';
+  deathsTab.textContent = 'Deaths';
+  recoveredTab.textContent = 'Recovered';
+
+  const selectTabContent = (tabName) => {
+    const tab = tabsContent.querySelector(`[data-tab-content="${tabName}"]`);
+    const tabsItems = [...tabsContent.querySelectorAll('.tab')];
+    tabsItems.forEach((elem) => elem.classList.remove('active'));
+    tab.classList.add('active');
+  };
+
+  this.selectTabNav = (tabName) => {
+    if (this.tabs.dataset.value === tabName) return;
+
+    const navItems = [...tabsNav.querySelectorAll('.tabs-nav__item')];
+    const tabNav = navItems.find((item) => item.getAttribute('data-tab-name') === tabName);
+
+    if (!tabNav) return;
+
+    this.tabs.dataset.value = tabName;
+    navItems.forEach((elem) => {
+      elem.classList.remove('active');
+    });
+
+    tabNav.classList.add('active');
+    selectTabContent(tabName);
+    this.onTabChange();
+  };
+
+  tabsNav.addEventListener('click', (e) => {
+    if (e.target.dataset.tabName) {
+      this.selectTabNav(e.target.dataset.tabName);
+    }
+  });
+
+  tabsContent.append(this.cases, this.deaths, this.recovered);
+  tabsNav.append(casesTab, deathsTab, recoveredTab);
+  this.tabs.append(tabsNav, tabsContent);
+  this.elem.append(this.tabs);
 }
 
 function Graph() {
@@ -125,6 +138,8 @@ function Graph() {
   this.select = create('div', 'graph__select', null, ['data-value', 'cases']);
   this.currentOption = create('div', 'graph__option');
   this.canvas = create('canvas', null, 'chart');
+
+  this.changeOption = undefined;
 
   this.onOptionChange = (func) => {
     if (func) {
@@ -158,8 +173,7 @@ function Graph() {
   });
   this.currentOption.textContent = capitalize(this.select.dataset.value);
 
-  const changeOption = (option) => {
-    const value = option.dataset.value;
+  this.changeOption = (value) => {
     if (this.select.dataset.value === value) return;
     this.currentOption.textContent = capitalize(value);
     this.select.dataset.value = value;
@@ -175,17 +189,17 @@ function Graph() {
 
   btnLeft.addEventListener('click', () => {
     const option = getNextOption(false);
-    changeOption(option);
+    this.changeOption(option.dataset.value);
   });
 
   btnRight.addEventListener('click', () => {
     const option = getNextOption(true);
-    changeOption(option);
+    this.changeOption(option.dataset.value);
   });
 
   list.addEventListener('click', (e) => {
     if (!e.target.classList.contains('graph__option')) return;
-    changeOption(e.target);
+    this.changeOption(e.target.dataset.value);
   });
 
   function toggleList() {

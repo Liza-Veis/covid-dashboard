@@ -29,6 +29,11 @@ class InteractiveMap {
     this.countriesGeo = undefined;
     this.selectedLayer = [];
     this.state = 'default';
+    this.isDivided = false;
+    this.isTotal = true;
+    this.perHundredThousand = 100000;
+
+    this.changeOption = undefined;
 
     this.onCountrySelect = (func) => {
       if (func) {
@@ -41,7 +46,7 @@ class InteractiveMap {
 
     this.onOptionChange = (func) => {
       if (func) {
-        this.onOptionChange = () => func(this.select.dataset.value);
+        this.onOptionChange = () => func(this.nav.select.dataset.value);
       }
     };
 
@@ -73,48 +78,48 @@ class InteractiveMap {
 
     this.thresholds = {
       default: [
-        [10000001, '>10M'],
-        [5000001, '5M-10M'],
-        [1000001, '1M-5M'],
-        [500001, '500K-1M'],
-        [250001, '250K-500K'],
-        [100001, '100K-250K'],
-        [50001, '50K-100K'],
-        [1001, '1K-50K'],
+        [10000000, '>10M'],
+        [5000000, '5M-10M'],
+        [1000000, '1M-5M'],
+        [500000, '500K-1M'],
+        [250000, '250K-500K'],
+        [100000, '100K-250K'],
+        [50000, '50K-100K'],
+        [1000, '1K-50K'],
         [0, '<1K']
       ],
       daily: [
-        [100001, '>100K'],
-        [50001, '50K-100K'],
-        [25001, '25K-50K'],
-        [20001, '20K-25K'],
-        [15001, '15K-20K'],
-        [10001, '10K-15K'],
-        [5001, '5K-10K'],
-        [1001, '1K-5K'],
-        [0, '<1K']
-      ],
-      absolute: [
-        [5001, '>5K'],
-        [3001, '3K-5K'],
-        [1001, '1K-3K'],
-        [751, '750-1K'],
-        [501, '500-750'],
-        [251, '250-500'],
-        [101, '100-250'],
-        [51, '50-100'],
-        [0, '<50']
-      ],
-      dailyAbsolute: [
-        [101, '>100'],
-        [91, '90-100'],
-        [81, '80-90'],
-        [66, '65-80'],
-        [41, '40-65'],
-        [31, '30-40'],
-        [21, '20-30'],
-        [11, '10-20'],
+        [30000, '>30K'],
+        [20000, '20K-30K'],
+        [10000, '10K-20K'],
+        [5000, '5K-10K'],
+        [1000, '1K-5K'],
+        [500, '500-1K'],
+        [100, '100-500'],
+        [10, '10-100'],
         [0, '<10']
+      ],
+      divided: [
+        [9000, '>9K'],
+        [8000, '8K-9K'],
+        [7000, '7K-8K'],
+        [6000, '6K-7K'],
+        [5000, '5K-6K'],
+        [3000, '3K-5K'],
+        [500, '500-3K'],
+        [10, '10-500'],
+        [0, '<10']
+      ],
+      dailyDivided: [
+        [100, '>100'],
+        [90, '90-100'],
+        [80, '80-90'],
+        [65, '70-80'],
+        [40, '30-70'],
+        [30, '10-30'],
+        [20, '5-10'],
+        [0.1, '0.1-5'],
+        [0, '<0.1']
       ]
     };
   }
@@ -135,6 +140,25 @@ class InteractiveMap {
   async setData(data) {
     this.data = await data;
     this.setMap();
+  }
+
+  async setState(isTotal, isDivided) {
+    if (this.isTotal === isTotal && this.isDivided === isDivided) return;
+    this.isTotal = isTotal;
+    this.isDivided = isDivided;
+    let state;
+    if (isTotal && isDivided) {
+      state = 'divided';
+    } else if (isTotal) {
+      state = 'default';
+    } else if (isDivided) {
+      state = 'dailyDivided';
+    } else {
+      state = 'daily';
+    }
+    this.state = state;
+    this.setMap(true);
+    this.updateLegend();
   }
 
   changeMapOption(option) {
@@ -199,7 +223,10 @@ class InteractiveMap {
     };
 
     marker.on({
-      mouseover: openPopup,
+      mouseover: () => {
+        openPopup();
+        marker.bringToFront();
+      },
       click: onClick.bind(this)
     });
 
@@ -244,16 +271,22 @@ class InteractiveMap {
   onEachFeature(feature, layer) {
     const { lat, long: lng } = feature.properties.countryInfo;
     const latlng = [lat, lng];
-    const value = feature.properties[this.option];
+
+    const option = this.isTotal ? this.option : `today${this.capitalize(this.option)}`;
+    let value = feature.properties[option];
+    if (this.isDivided) {
+      value = ((value / feature.properties.population) * this.perHundredThousand).toFixed(2);
+    }
+
     const marker = this.addMarker(value, latlng);
 
     this.markers.set(marker, layer);
-    this.addPopupToMarker(marker, feature);
+    this.addPopupToMarker(marker, feature, value);
   }
 
-  addPopupToMarker(marker, feature) {
+  addPopupToMarker(marker, feature, value) {
     const { properties = {} } = feature;
-    const value = properties[this.option];
+
     const popup = `
   	 <div class="popup__header">
   	 <h2 class="popup__country">${properties.country}</h2>
@@ -285,6 +318,7 @@ class InteractiveMap {
       [...this.markers.keys()].forEach((marker) => this.map.removeLayer(marker));
       this.markers.clear();
     }
+
     this.interactiveLayer = await this.addInteractiveLayer().catch();
 
     if (this.selectedLayer[1]) {
@@ -314,15 +348,21 @@ class InteractiveMap {
 
   getMarkerRadius(value) {
     const radii = [20, 16, 14, 12, 10, 9, 7, 5, 3];
-    const radiusIdx = this.thresholds.default.findIndex((elem) => value >= elem[0]);
+    const radiusIdx = this.thresholds[this.state].findIndex((elem) => value >= elem[0]);
     return radii[radiusIdx];
   }
 
   updateLegend() {
-    this.legendMarkers.forEach((elem) => {
+    const threshold = this.thresholds[this.state];
+    this.legendMarkers.forEach(([elem, value], idx) => {
       const marker = elem;
+      const valueItem = value;
+      const size = this.getMarkerRadius(threshold[idx][0]) * 2;
       marker.style.backgroundColor = this.markersStyle.fillColor;
       marker.style.border = `${this.markersStyle.weight}px solid ${this.markersStyle.color}`;
+      marker.style.width = size + 'px';
+      marker.style.height = size + 'px';
+      valueItem.textContent = threshold[idx][1];
     });
   }
 
@@ -362,21 +402,21 @@ class InteractiveMap {
 
       main.addEventListener('dblclick', preventEvent);
 
-      this.thresholds.default.forEach((elem) => {
+      this.thresholds[this.state].forEach((elem) => {
         const grade = elem[0];
         const size = this.getMarkerRadius(grade) * 2;
         const legendItem = L.DomUtil.create('div', 'legend__item', container);
         const markerWrapper = L.DomUtil.create('div', 'legend__circle-wrapper', legendItem);
         const marker = L.DomUtil.create('div', 'legend__circle', markerWrapper);
+        const value = L.DomUtil.create('div', 'legend__value', legendItem);
 
-        this.legendMarkers.push(marker);
+        this.legendMarkers.push([marker, value]);
 
         marker.style.width = size + 'px';
         marker.style.height = size + 'px';
         marker.style.backgroundColor = this.markersStyle.fillColor;
         marker.style.border = `${this.markersStyle.weight}px solid ${this.markersStyle.color}`;
 
-        const value = L.DomUtil.create('div', 'legend__value', legendItem);
         value.textContent = elem[1];
       });
 
@@ -424,8 +464,7 @@ class InteractiveMap {
       });
       this.nav.currentOption.textContent = this.capitalize(this.nav.select.dataset.value);
 
-      const changeOption = (option) => {
-        const value = option.dataset.value;
+      this.changeOption = (value) => {
         if (this.nav.select.dataset.value === value) return;
         this.nav.currentOption.textContent = this.capitalize(value);
         this.nav.select.dataset.value = value;
@@ -444,15 +483,15 @@ class InteractiveMap {
 
       btnLeft.addEventListener('click', () => {
         const option = getNextOption(false);
-        changeOption(option);
+        this.changeOption(option.dataset.value);
       });
       btnRight.addEventListener('click', () => {
         const option = getNextOption(true);
-        changeOption(option);
+        this.changeOption(option.dataset.value);
       });
       list.addEventListener('click', (event) => {
         if (!event.target.classList.contains('map__option')) return;
-        changeOption(event.target);
+        this.changeOption(event.target.dataset.value);
       });
 
       function toggleList() {
