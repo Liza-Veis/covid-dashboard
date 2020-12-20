@@ -207,7 +207,27 @@ function Graph() {
   this.elem.append(this.canvas, graphFooter);
 }
 
-const header = create('header', 'header');
+function Header() {
+  this.elem = create('header', 'header');
+  this.search = create('input', null, 'search', ['type', 'text']);
+  this.nav = create('nav', 'header__nav');
+  this.menuBtn = create('div', 'menu-button');
+  this.menuList = create('ul', 'menu-list');
+  this.news = create('li', 'menu-list__item');
+  this.newsList = create('div', 'news-list');
+  const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
+
+  this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
+  this.news.textContent = 'Last news';
+  this.menuBtn.append(burgerImage);
+  this.menuList.append(this.news);
+  this.nav.append(this.search);
+  this.nav.append(this.menuBtn);
+  this.nav.append(this.menuList);
+  this.elem.append(this.nav);
+  this.elem.append(this.newsList);
+}
+
 const container = create('main', 'main');
 const footer = create('footer', 'footer');
 
@@ -215,15 +235,11 @@ const map = create('div', 'map');
 const statistics = new Statistics();
 const countriesList = new CountriesList();
 const graph = new Graph();
-
-const search = create('input', null, 'search', ['type', 'text']);
-
-header.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
-header.append(search);
+const header = new Header();
 
 footer.textContent = 'Footer';
 
 container.append(countriesList.elem, map, statistics.elem, graph.elem);
-document.body.append(header, container, footer);
+document.body.append(header.elem, container, footer);
 
-export { search, countriesList, statistics, graph, map };
+export { header, countriesList, statistics, graph, map };

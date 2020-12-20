@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import Chart from 'chart.js';
-import { DateTime } from 'luxon';
 
 class DataChart {
   constructor(canvas) {
@@ -113,7 +112,13 @@ class DataChart {
     if (candidate !== this.lastUpdated) {
       clearInterval(this.interval);
       this.init();
+      this.setDefaultChart();
     }
+  }
+
+  setDefaultChart() {
+    document.querySelector('.graph__select').setAttribute('data-value', 'cases');
+    document.querySelector('.graph__option.graph__option--current').textContent = 'Cases';
   }
 
   async init() {
