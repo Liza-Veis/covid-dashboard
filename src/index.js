@@ -15,30 +15,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     statistics.cases,
     statistics.deaths,
     statistics.recovered,
-    statistics.countryName,
-    chart,
-    graph
+    statistics.countryName
   );
   const searcher = new Search(search, 'countries-list__item');
+
   await covid.init();
+  await chart.init();
   await searcher.init();
   await interactiveMap.init(covid.getData());
 
   graph.onOptionChange(async (value) => {
-    await chart.getDataByValue(value);
+    if (['cases', 'deaths', 'recovered'].indexOf(value) !== -1) {
+      interactiveMap.changeOption(value);
+      countriesList.selectTabNav(value);
+    }
+    chart.getDataByValue(value);
   });
 
-  countriesList.onTabChange((value) => {
+  countriesList.onTabChange(async (value) => {
     interactiveMap.changeOption(value);
+    graph.changeOption(value, true);
   });
 
   interactiveMap.onOptionChange((value) => {
     countriesList.selectTabNav(value);
   });
 
-  interactiveMap.onCountrySelect((iso3) => covid.setCountryData(iso3));
+  interactiveMap.onCountrySelect(async (iso3) => {
+    const currentCountryIso3 = statistics.countryName.dataset.iso3;
+    if (currentCountryIso3 === iso3) return;
 
-  countriesList.elem.addEventListener('click', (e) => {
+    await covid.setCountryData(iso3);
+    if (!graph.isCountrySelected) {
+      graph.isCountrySelected = true;
+    }
+    graph.changeOption('country total', true);
+  });
+
+  countriesList.elem.addEventListener('click', async (e) => {
     const elem = e.target.closest('.countries-list__item');
     if (elem) {
       interactiveMap.selectCountryByIso3(elem.dataset.iso3);
@@ -49,6 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     this.classList.toggle('active');
     await covid.changeIsTotalState();
     interactiveMap.setState(covid.isTotal, covid.isDivided);
+    if (covid.isTotal !== graph.isTotal) {
+      graph.isTotal = covid.isTotal;
+      graph.changeOption(covid.isTotal ? interactiveMap.option : 'daily', true);
+    }
   });
 
   document.querySelector('#data-display-switch').addEventListener('click', async function () {
@@ -56,6 +74,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     await covid.changeIsDividedState();
     interactiveMap.setState(covid.isTotal, covid.isDivided);
   });
-  window.graph = graph;
-  console.log(graph);
 });

@@ -1,7 +1,7 @@
 class CovidDataMiner {
   constructor(totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
-    countryDeathsSelector, countryRecoveredSelector, countryNameSelector, chart, graph) {
+    countryDeathsSelector, countryRecoveredSelector, countryNameSelector) {
     this.baseUrl = 'https://disease.sh/v3/covid-19/countries';
     this.isTotal = true;
     this.isDivided = false;
@@ -17,8 +17,6 @@ class CovidDataMiner {
     this.countryDeathsSelector = countryDeathsSelector;
     this.countryRecoveredSelector = countryRecoveredSelector;
     this.countryNameSelector = countryNameSelector;
-    this.chart = chart;
-    this.graph = graph;
   }
 
   async getData() {
@@ -72,9 +70,6 @@ class CovidDataMiner {
     }
     document.querySelector('#search').value = '';
     document.querySelector('#search').dispatchEvent(new Event('input'));
-    await this.chart.init();
-    document.querySelector('.graph__select').setAttribute('data-value', 'cases');
-    document.querySelector('.graph__option.graph__option--current').textContent = 'Cases';
   }
 
   async countryListClickHandler(event) {

@@ -45,11 +45,6 @@ function Statistics() {
   deathsRow.append(deathsTitle, this.deaths);
   recoveredRow.append(recoveredTitle, this.recovered);
 
-  this.countryName.textContent = 'Brazil';
-  this.cases.textContent = '1000000';
-  this.deaths.textContent = '1000000';
-  this.recovered.textContent = '1000000';
-
   statisticsContent.append(casesRow, deathsRow, recoveredRow);
   statisticsFooter.append(this.periodSwitch, this.dataDisplaySwitch);
   this.elem.append(this.countryName, statisticsContent, statisticsFooter);
@@ -140,6 +135,8 @@ function Graph() {
   this.canvas = create('canvas', null, 'chart');
 
   this.changeOption = undefined;
+  this.isCountrySelected = false;
+  this.isTotal = true;
 
   this.onOptionChange = (func) => {
     if (func) {
@@ -171,12 +168,31 @@ function Graph() {
     const option = elem;
     option.textContent = capitalize(elem.dataset.value);
   });
+
   this.currentOption.textContent = capitalize(this.select.dataset.value);
 
-  this.changeOption = (value) => {
-    if (this.select.dataset.value === value) return;
-    this.currentOption.textContent = capitalize(value);
-    this.select.dataset.value = value;
+  this.changeOption = (value, isDepend) => {
+    if (this.select.dataset.value === value && value !== 'country total') return;
+    let targetValue = value;
+
+    if (isDepend) {
+      if (this.isCountrySelected && !this.isTotal) {
+        targetValue = 'country daily';
+      } else if (this.isCountrySelected) {
+        targetValue = 'country total';
+      } else if (!this.isTotal) {
+        targetValue = 'daily';
+      }
+    }
+    const isDefaultValue = ['cases', 'deaths', 'recovered'].indexOf(value) !== -1;
+    const isDefaultTargetValue = ['cases', 'deaths', 'recovered'].indexOf(targetValue) !== -1;
+    if (isDefaultValue && !isDefaultTargetValue) {
+      const isCorrectCurrentValue = this.select.dataset.value === targetValue;
+      if (isCorrectCurrentValue) return;
+    }
+
+    this.currentOption.textContent = capitalize(targetValue);
+    this.select.dataset.value = targetValue;
     this.onOptionChange();
   };
 

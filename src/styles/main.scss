@@ -363,12 +363,16 @@ body {
   @include select();
 }
 
-.map {
+.map.leaflet-container {
   grid-area: map;
   background-size: cover;
   background-position: center;
   background-color: $parts-bg-color;
   border: $border;
+  outline: none;
+}
+
+.map {
   @include select();
   &__nav {
     display: flex;
