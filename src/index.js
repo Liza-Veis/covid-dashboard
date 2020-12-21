@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     statistics.recovered,
     statistics.countryName,
     chart,
-    graph
   );
   const searcher = new Search(header.search, 'countries-list__item');
   const news = new News();
@@ -91,9 +90,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
       const item = document.querySelector('.fullscreen.active');
-      item.querySelector('.open').removeAttribute('data-hide');
-      item.querySelector('.close').setAttribute('data-hide', '');
-      item.classList.remove('active');
+      if (item) {
+        item.querySelector('.open').removeAttribute('data-hide');
+        item.querySelector('.close').setAttribute('data-hide', '');
+        item.classList.remove('active');
+      }
     }
   });
 });
