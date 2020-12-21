@@ -116,9 +116,10 @@ class DataChart {
       this.init();
     }
   }
-
+  
   async init() {
-    this.resetCanvas();
+	 this.resetCanvas();
+	 
     const allData = await this.getGlobalData();
     const dataArray = (Object.entries(allData.cases));
     const dataValues = [];

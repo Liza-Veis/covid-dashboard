@@ -38,10 +38,6 @@ class CovidDataMiner {
     }
   }
 
-  resetTableHtml() {
-
-  }
-
   async setGlobalData() {
     const data = await this.getData();
     const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'cases' : 'todayCases');
@@ -58,14 +54,13 @@ class CovidDataMiner {
   async setCountryData(countryIso3) {
     this.selectedCountryIso3 = countryIso3;
     const data = await this.getDataByCountry(this.selectedCountryIso3);
-    const tabs = document.querySelector('.tabs__content');
     this.countryCasesSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'cases' : 'todayCases');
     this.countryDeathsSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'deaths' : 'todayDeaths');
     this.countryRecoveredSelector.innerHTML = await this.getRefactorCountryData(data, this.isTotal ? 'recovered' : 'todayRecovered');
     this.countryNameSelector.innerHTML = data.country;
     this.countryNameSelector.setAttribute('data-iso3', this.selectedCountryIso3);
     if (!this.isHandled) {
-      tabs.addEventListener('click', await this.countryListClickHandler.bind(this), false);
+      document.querySelector('.tabs__content').addEventListener('click', await this.countryListClickHandler.bind(this), false);
       this.isHandled = true;
     }
     document.querySelector('#search').value = '';
