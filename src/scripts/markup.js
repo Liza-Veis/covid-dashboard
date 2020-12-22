@@ -132,6 +132,7 @@ function CountriesList() {
 
   tabsContent.append(this.cases, this.deaths, this.recovered);
   tabsNav.append(casesTab, deathsTab, recoveredTab);
+
   this.tabs.append(tabsNav, tabsContent);
   this.elem.append(this.tabs, fullScreener);
 }

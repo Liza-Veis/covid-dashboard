@@ -109,9 +109,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
       const item = document.querySelector('.fullscreen.active');
-      item.querySelector('.open').removeAttribute('data-hide');
-      item.querySelector('.close').setAttribute('data-hide', '');
-      item.classList.remove('active');
+      if (item) {
+        item.querySelector('.open').removeAttribute('data-hide');
+        item.querySelector('.close').setAttribute('data-hide', '');
+        item.classList.remove('active');
+      }
     }
   });
 });
