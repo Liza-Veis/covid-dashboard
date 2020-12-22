@@ -170,7 +170,7 @@ body {
 
 .tabs {
   position: relative;
-  height: 100%;
+  height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -415,6 +415,7 @@ body {
 @import './map.scss';
 
 #search {
+  width: 100%;
   font-size: 1.125rem;
   padding: 5px 10px;
   border: none;

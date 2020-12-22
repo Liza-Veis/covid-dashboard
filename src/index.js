@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     statistics.recovered,
     statistics.countryName
   );
-  const searcher = new Search(header.search, 'countries-list__item');
+  const searcher = new Search(countriesList.search, 'countries-list__item');
   const news = new News();
 
   await covid.init();

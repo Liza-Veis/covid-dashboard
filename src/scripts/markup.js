@@ -60,6 +60,7 @@ function CountriesList() {
   this.deaths = create('div');
   this.recovered = create('div');
   this.tabs = create('div', 'tabs');
+  this.search = create('input', null, 'search', ['type', 'text']);
 
   this.selectTabNav = undefined;
 
@@ -134,7 +135,7 @@ function CountriesList() {
   tabsNav.append(casesTab, deathsTab, recoveredTab);
 
   this.tabs.append(tabsNav, tabsContent);
-  this.elem.append(this.tabs, fullScreener);
+  this.elem.append(this.search, this.tabs, fullScreener);
 }
 
 function Graph() {
@@ -252,7 +253,6 @@ function Graph() {
 
 function Header() {
   this.elem = create('header', 'header');
-  this.search = create('input', null, 'search', ['type', 'text']);
   this.nav = create('nav', 'header__nav');
   this.menuBtn = create('div', 'menu-button');
   this.menuList = create('ul', 'menu-list');
@@ -270,7 +270,7 @@ function Header() {
   + '<option value=1800000>30 minutes</option><option value=3600000>1 hour</option>';
   this.menuBtn.append(burgerImage);
   this.menuList.append(this.news, this.reset, this.updateTime);
-  this.nav.append(this.search, this.menuBtn, this.menuList);
+  this.nav.append(this.menuBtn, this.menuList);
   this.elem.append(this.nav, this.newsList);
 }
 
