@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function setDefault(covidObj, interactiveMapObj, graphObj) {
     await covidObj.resetSelectedCountry();
+    interactiveMapObj.closePopup();
     graphObj.isCountrySelected = false;
     graphObj.changeOption(interactiveMapObj.option, true);
   }

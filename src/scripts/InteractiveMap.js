@@ -79,7 +79,6 @@ class InteractiveMap {
       fillOpacity: 1
     };
 
-    this.closePopup = undefined;
     this.openPopup = undefined;
 
     this.thresholds = {
@@ -167,6 +166,22 @@ class InteractiveMap {
     this.updateLegend();
   }
 
+  closePopup(isNextCountrySelected) {
+    if (!this.selectedLayer[0]) return;
+    const marker = this.selectedLayer[0];
+    const popup = marker.getPopup();
+    marker.closePopup();
+    popup.options.autoClose = true;
+    popup.options.closeOnClick = true;
+    popup.getElement().classList.remove('active');
+
+    this.addInteractivityToGroup(...this.selectedLayer);
+    this.selectedLayer = [];
+    if (!isNextCountrySelected) {
+      this.onPopupClose();
+    }
+  }
+
   changeMapOption(option) {
     this.option = option;
     this.setMap(true).then(this.updateLegend.bind(this));
@@ -212,7 +227,6 @@ class InteractiveMap {
     const openPopup = () => {
       if (!marker.getPopup().isOpen()) marker.openPopup();
     };
-    const closePopup = () => marker.closePopup();
 
     const onClick = (noZoomToBounds) => {
       const isInside = layer.getBounds().contains(marker.getLatLng());
@@ -222,7 +236,6 @@ class InteractiveMap {
       if (noZoomToBounds !== true) this.map.fitBounds(target.getBounds(), options);
 
       this.map.closePopup();
-      this.closePopup = closePopup;
       this.openPopup = openPopup;
       this.selectCountry(marker, layer);
     };
@@ -237,7 +250,7 @@ class InteractiveMap {
 
     layer.on({
       mouseover: openPopup,
-      mouseout: closePopup,
+      mouseout: () => marker.closePopup(),
       click: onClick.bind(this),
       dblClick: onClick.bind(this)
     });
@@ -249,20 +262,13 @@ class InteractiveMap {
     const [marker, layer] = [...this.markers.entries()].find(([key, value]) => {
       return value.feature.properties.countryInfo.iso3 === iso3;
     });
+    if (marker === this.selectedLayer[0] || layer === this.selectedLayer[1]) return;
     this.addInteractivityToGroup(marker, layer, true, noZoom);
   }
 
   selectCountry(marker, layer) {
     if (marker === this.selectedLayer[0] || layer === this.selectedLayer[1]) return;
-    if (this.selectedLayer[0]) {
-      this.selectedLayer[0].closePopup();
-      const popup = this.selectedLayer[0].getPopup();
-      popup.options.autoClose = true;
-      popup.options.closeOnClick = true;
-      popup.getElement().classList.remove('active');
-
-      this.addInteractivityToGroup(...this.selectedLayer);
-    }
+    this.closePopup(true);
 
     this.selectedLayer = [marker, layer];
     const popup = this.selectedLayer[0].getPopup();
@@ -276,14 +282,7 @@ class InteractiveMap {
     popup.getElement().classList.add('active');
     popup.getElement().onclick = (e) => {
       if (e.target.classList.contains('popup__close')) {
-        marker.closePopup();
-        popup.options.autoClose = true;
-        popup.options.closeOnClick = true;
-        popup.getElement().classList.remove('active');
-
-        this.addInteractivityToGroup(...this.selectedLayer);
-        this.selectedLayer = [];
-        this.onPopupClose();
+        this.closePopup();
       }
     };
 
