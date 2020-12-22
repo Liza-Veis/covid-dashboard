@@ -8,8 +8,6 @@ class CovidDataMiner {
     this.isHandled = false;
     this.selectedCountryIso3 = null;
     this.perHundredThousand = 100000;
-    this.populationData = [];
-    this.lastUpdated = null;
     this.totalCasesSelector = totalCasesSelector;
     this.totalDeathsSelector = totalDeathsSelector;
     this.totalRecoveredSelector = totalRecoveredSelector;
@@ -23,11 +21,6 @@ class CovidDataMiner {
     const response = await fetch(this.baseUrl);
     const data = await response.json();
     return data;
-  }
-
-  async setLastUpdate() {
-    const data = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
-    this.lastUpdated = data.updated;
   }
 
   async setCountryTabsData() {
@@ -84,11 +77,8 @@ class CovidDataMiner {
   }
 
   async init() {
-    await this.setLastUpdate();
     await this.setCountryTabsData();
     await this.setWorldData();
-    await this.chart.init();
-    this.chart.setDefaultChart();
   }
 
   async changeIsTotalState() {

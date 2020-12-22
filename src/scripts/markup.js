@@ -259,19 +259,19 @@ function Header() {
   this.news = create('li', 'menu-list__item');
   this.reset = create('li', 'menu-list__item');
   this.newsList = create('div', 'news-list');
+  this.updateTime = create('select', 'menu-list__item', 'updater');
   const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
 
   this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
   this.news.textContent = 'Last news';
   this.reset.textContent = 'Show global data';
+  this.updateTime.innerHTML = '<option disabled selected>Select update data time</option><option value=60000>1 minute</option>'
+  + '<option value=300000>5 minutes</option><option value=900000>15 minutes</option>'
+  + '<option value=1800000>30 minutes</option><option value=3600000>1 hour</option>';
   this.menuBtn.append(burgerImage);
-  this.menuList.append(this.news);
-  this.menuList.append(this.reset);
-  this.nav.append(this.search);
-  this.nav.append(this.menuBtn);
-  this.nav.append(this.menuList);
-  this.elem.append(this.nav);
-  this.elem.append(this.newsList);
+  this.menuList.append(this.news, this.reset, this.updateTime);
+  this.nav.append(this.search, this.menuBtn, this.menuList);
+  this.elem.append(this.nav, this.newsList);
 }
 
 const container = create('main', 'main');

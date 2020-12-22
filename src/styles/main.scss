@@ -524,7 +524,7 @@ body {
   right: 0;
   width: 25px;
   height: 25px;
-  background-color: $cases-color;
+  background-color: $border-color;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -543,3 +543,16 @@ body {
     height: 16px;
   }
 }
+
+.updater {
+  border: $border;
+  background-color: $body-bg-color;
+  color: $font-color;
+}
+
+select, option {
+  text-align: center;
+  text-align-last: center;
+  -moz-text-align-last: center;
+}
+
