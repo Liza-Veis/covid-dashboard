@@ -1,7 +1,7 @@
 class CovidDataMiner {
   constructor(totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
-    countryDeathsSelector, countryRecoveredSelector, countryNameSelector, chart) {
+    countryDeathsSelector, countryRecoveredSelector, countryNameSelector) {
     this.baseUrl = 'https://disease.sh/v3/covid-19/countries';
     this.isTotal = true;
     this.isDivided = false;
@@ -17,7 +17,6 @@ class CovidDataMiner {
     this.countryDeathsSelector = countryDeathsSelector;
     this.countryRecoveredSelector = countryRecoveredSelector;
     this.countryNameSelector = countryNameSelector;
-    this.chart = chart;
   }
 
   async getData() {

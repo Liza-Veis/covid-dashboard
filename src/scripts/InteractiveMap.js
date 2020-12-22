@@ -50,6 +50,12 @@ class InteractiveMap {
       }
     };
 
+    this.onPopupClose = (func) => {
+      if (func) {
+        this.onPopupClose = func;
+      }
+    };
+
     this.nav = {
       select: undefined,
       currentOption: undefined
@@ -219,7 +225,6 @@ class InteractiveMap {
       this.closePopup = closePopup;
       this.openPopup = openPopup;
       this.selectCountry(marker, layer);
-      openPopup();
     };
 
     marker.on({
@@ -254,16 +259,33 @@ class InteractiveMap {
       const popup = this.selectedLayer[0].getPopup();
       popup.options.autoClose = true;
       popup.options.closeOnClick = true;
+      popup.getElement().classList.remove('active');
+
       this.addInteractivityToGroup(...this.selectedLayer);
     }
 
     this.selectedLayer = [marker, layer];
     const popup = this.selectedLayer[0].getPopup();
+
     layer.clearAllEventListeners();
     marker.clearAllEventListeners();
 
     popup.options.autoClose = false;
     popup.options.closeOnClick = false;
+    this.openPopup();
+    popup.getElement().classList.add('active');
+    popup.getElement().onclick = (e) => {
+      if (e.target.classList.contains('popup__close')) {
+        marker.closePopup();
+        popup.options.autoClose = true;
+        popup.options.closeOnClick = true;
+        popup.getElement().classList.remove('active');
+
+        this.addInteractivityToGroup(...this.selectedLayer);
+        this.selectedLayer = [];
+        this.onPopupClose();
+      }
+    };
 
     this.onCountrySelect();
   }
@@ -291,6 +313,7 @@ class InteractiveMap {
   	 <div class="popup__header">
   	 <h2 class="popup__country">${properties.country}</h2>
   	 <img class="popup__flag" src="${properties.countryInfo.flag}" />
+  	 <div class="popup__close">×</div>
   	 </div>
   	 <span class="popup__content">${this.capitalize(this.option)}: ${value}</span>`;
 
