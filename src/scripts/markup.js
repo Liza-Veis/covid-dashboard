@@ -36,8 +36,10 @@ function Statistics() {
   const casesTitle = create('div', 'statistics__title');
   const deathsTitle = create('div', 'statistics__title');
   const recoveredTitle = create('div', 'statistics__title');
+
   const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
+  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
+  <img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   casesTitle.textContent = 'Cases';
   deathsTitle.textContent = 'Deaths';
@@ -46,11 +48,6 @@ function Statistics() {
   casesRow.append(casesTitle, this.cases);
   deathsRow.append(deathsTitle, this.deaths);
   recoveredRow.append(recoveredTitle, this.recovered);
-
-  this.countryName.textContent = 'Brazil';
-  this.cases.textContent = '1000000';
-  this.deaths.textContent = '1000000';
-  this.recovered.textContent = '1000000';
 
   statisticsContent.append(casesRow, deathsRow, recoveredRow);
   statisticsFooter.append(this.periodSwitch, this.dataDisplaySwitch);
@@ -71,6 +68,10 @@ function CountriesList() {
       this.onTabChange = () => func(this.tabs.dataset.value);
     }
   };
+
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
+	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   const tabsNav = create('div', 'tabs__nav');
   const tabsContent = create('div', 'tabs__content');
@@ -132,9 +133,6 @@ function CountriesList() {
   tabsContent.append(this.cases, this.deaths, this.recovered);
   tabsNav.append(casesTab, deathsTab, recoveredTab);
 
-  const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
-
   this.tabs.append(tabsNav, tabsContent);
   this.elem.append(this.tabs, fullScreener);
 }
@@ -146,6 +144,8 @@ function Graph() {
   this.canvas = create('canvas', null, 'chart');
 
   this.changeOption = undefined;
+  this.isCountrySelected = false;
+  this.isTotal = true;
 
   this.onOptionChange = (func) => {
     if (func) {
@@ -157,14 +157,17 @@ function Graph() {
   const btnLeft = create('button', 'graph__btn');
   const btnRight = create('button', 'graph__btn');
   const list = create('ul', 'graph__list');
+
   const cases = create('li', 'graph__option', null, ['data-value', 'cases']);
   const deaths = create('li', 'graph__option', null, ['data-value', 'deaths']);
   const recovered = create('li', 'graph__option', null, ['data-value', 'recovered']);
   const daily = create('li', 'graph__option', null, ['data-value', 'daily']);
   const countryTotal = create('li', 'graph__option', null, ['data-value', 'country total']);
   const countryDaily = create('li', 'graph__option', null, ['data-value', 'country daily']);
+
   const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
+  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
+	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   this.currentOption.classList.add('graph__option--current');
   btnLeft.classList.add('graph__btn--left');
@@ -178,12 +181,31 @@ function Graph() {
     const option = elem;
     option.textContent = capitalize(elem.dataset.value);
   });
+
   this.currentOption.textContent = capitalize(this.select.dataset.value);
 
-  this.changeOption = (value) => {
-    if (this.select.dataset.value === value) return;
-    this.currentOption.textContent = capitalize(value);
-    this.select.dataset.value = value;
+  this.changeOption = (value, isDepend) => {
+    if (this.select.dataset.value === value && value !== 'country total') return;
+    let targetValue = value;
+
+    if (isDepend) {
+      if (this.isCountrySelected && !this.isTotal) {
+        targetValue = 'country daily';
+      } else if (this.isCountrySelected) {
+        targetValue = 'country total';
+      } else if (!this.isTotal) {
+        targetValue = 'daily';
+      }
+    }
+    const isDefaultValue = ['cases', 'deaths', 'recovered'].indexOf(value) !== -1;
+    const isDefaultTargetValue = ['cases', 'deaths', 'recovered'].indexOf(targetValue) !== -1;
+    if (isDefaultValue && !isDefaultTargetValue) {
+      const isCorrectCurrentValue = this.select.dataset.value === targetValue;
+      if (isCorrectCurrentValue) return;
+    }
+
+    this.currentOption.textContent = capitalize(targetValue);
+    this.select.dataset.value = targetValue;
     this.onOptionChange();
   };
 
@@ -253,9 +275,11 @@ const container = create('main', 'main');
 const footer = create('footer', 'footer');
 
 const map = create('div', 'map');
-const fullScreener = create('div', 'fullscreen');
-fullScreener.innerHTML = '<img src="../assets/icons/fullscreen.svg" class="open"><img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >';
-map.append(fullScreener);
+const mapFullScreener = create('div', 'fullscreen');
+mapFullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
+<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+map.append(mapFullScreener);
+
 const statistics = new Statistics();
 const countriesList = new CountriesList();
 const graph = new Graph();

@@ -369,14 +369,19 @@ body {
   @include select();
 }
 
-.map {
+.map.leaflet-container {
   grid-area: map;
   background-size: cover;
   background-position: center;
   background-color: $parts-bg-color;
   border: $border;
   position: relative;
+  max-height: 100vh;
+  outline: none;
   z-index: 1;
+}
+
+.map {
   @include select();
   &__nav {
     display: flex;
@@ -400,15 +405,17 @@ body {
   &__option:last-child {
     width: 100%;
   }
+
   & > .fullscreen {
     z-index: 9999;
     transform: translate(0, 0);
   }
 }
 
+@import './map.scss';
+
 #search {
   font-size: 1.125rem;
-  height: 30px;
   padding: 5px 10px;
   border: none;
   outline: none;
@@ -484,9 +491,10 @@ body {
   display: grid;
   width: 320px;
   height: 300px;
-  grid-template-areas: "title title"
-                       "image image"
-                       "pubDate pubDate";
+  grid-template-areas:
+    'title title'
+    'image image'
+    'pubDate pubDate';
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100px 150px 50px;
   align-items: center;
@@ -515,7 +523,7 @@ body {
   right: 0;
   width: 25px;
   height: 25px;
-  background-color:$cases-color;
+  background-color: $cases-color;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -534,5 +542,3 @@ body {
     height: 16px;
   }
 }
-
-@import './map.scss';

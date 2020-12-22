@@ -1,6 +1,7 @@
 {
   "rules": {
-    "linebreak-style": ["error", "windows"],
+    "linebreak-style": "off",
+    //  "linebreak-style": ["error", "windows"],
     "no-tabs": [2, { "allowIndentationTabs": true }],
     "class-methods-use-this": "off",
     "no-unused-vars": "off",

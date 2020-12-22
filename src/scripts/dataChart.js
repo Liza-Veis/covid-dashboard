@@ -38,6 +38,7 @@ class DataChart {
 
   async getDataByValue(value) {
     this.chart.destroy();
+    this.resetCanvas();
     if (value === 'country total' || value === 'country daily') {
       const country = document.querySelector('.statistics__country-name');
       const response = await fetch(`https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`);
@@ -100,6 +101,7 @@ class DataChart {
     }
     this.chart.options.title.display = true;
     this.chart.options.legend.display = false;
+    this.chart.update();
   }
 
   async getCandidate() {
@@ -112,19 +114,14 @@ class DataChart {
     if (candidate !== this.lastUpdated) {
       clearInterval(this.interval);
       this.init();
-      this.setDefaultChart();
     }
   }
 
-  setDefaultChart() {
-    document.querySelector('.graph__select').setAttribute('data-value', 'cases');
-    document.querySelector('.graph__option.graph__option--current').textContent = 'Cases';
-  }
-
   async init() {
-    if (this.chart) this.chart.destroy();
+    this.resetCanvas();
+
     const allData = await this.getGlobalData();
-    const dataArray = (Object.entries(allData.cases));
+    const dataArray = Object.entries(allData.cases);
     const dataValues = [];
     const dataLabels = [];
     dataArray.forEach((item) => {
@@ -167,6 +164,15 @@ class DataChart {
       await this.updateData();
     }, 600000);
     this.options = Object.assign({}, this.chart.options);
+  }
+
+  resetCanvas() {
+    const oldCanvas = this.canvas;
+    const canvas = document.createElement('canvas');
+    this.canvas.replaceWith(canvas);
+    canvas.id = 'chart';
+    oldCanvas.remove();
+    this.canvas = canvas;
   }
 }
 
