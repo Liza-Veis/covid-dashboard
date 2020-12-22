@@ -4,10 +4,12 @@ import Search from './scripts/Search';
 import DataChart from './scripts/DataChart';
 import InteractiveMap from './scripts/InteractiveMap';
 import News from './scripts/News';
+import Updater from './scripts/Updater';
 import { header, countriesList, statistics, graph, map } from './scripts/markup.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const chart = new DataChart(graph.canvas);
+  chart.init();
   const interactiveMap = new InteractiveMap(map);
   const covid = new CovidDataMiner(
     countriesList.cases,
@@ -24,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   await covid.init();
   await searcher.init();
   await interactiveMap.init(covid.getData());
+  const updater = new Updater(covid, chart, interactiveMap, 600000);
+  updater.init();
 
   graph.onOptionChange(async (value) => {
     await chart.getDataByValue(value);
@@ -69,6 +73,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   header.news.addEventListener('click', async () => {
     header.newsList.classList.toggle('active');
+  });
+
+  header.reset.addEventListener('click', async () => {
+    await covid.resetSelectedCountry();
+    header.menuList.classList.remove('active');
+    if (header.newsList.classList.contains('active')) {
+      header.newsList.classList.remove('active');
+    }
   });
 
   document.querySelectorAll('.fullscreen').forEach((item) => {

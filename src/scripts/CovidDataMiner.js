@@ -6,7 +6,7 @@ class CovidDataMiner {
     this.isTotal = true;
     this.isDivided = false;
     this.isHandled = false;
-    this.selectedCountryIso3 = 'BLR';
+    this.selectedCountryIso3 = null;
     this.perHundredThousand = 100000;
     this.populationData = [];
     this.lastUpdated = null;
@@ -31,14 +31,7 @@ class CovidDataMiner {
     this.lastUpdated = data.updated;
   }
 
-  async updateData() {
-    const candidate = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
-    if (candidate.updated !== this.lastUpdated) {
-      this.init();
-    }
-  }
-
-  async setGlobalData() {
+  async setCountryTabsData() {
     const data = await this.getData();
     const totalCasesFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'cases' : 'todayCases');
     const totalDeathsFragment = await this.createCountriesDataFragment(data, this.isTotal ? 'deaths' : 'todayDeaths');
@@ -65,8 +58,6 @@ class CovidDataMiner {
     }
     document.querySelector('#search').value = '';
     document.querySelector('#search').dispatchEvent(new Event('input'));
-    await this.chart.init();
-    this.chart.setDefaultChart();
   }
 
   async countryListClickHandler(event) {
@@ -79,25 +70,46 @@ class CovidDataMiner {
     }
   }
 
+  async setWorldData() {
+    const response = await fetch('https://disease.sh/v3/covid-19/all');
+    const data = await response.json();
+    this.countryNameSelector.innerHTML = 'Global';
+    this.countryCasesSelector.innerHTML = this.isTotal ? data.cases : data.todayCases;
+    this.countryDeathsSelector.innerHTML = this.isTotal ? data.deaths : data.todayDeaths;
+    this.countryRecoveredSelector.innerHTML = this.isTotal ? data.recovered : data.todayRecovered;
+  }
+
+  async resetSelectedCountry() {
+    this.selectedCountryIso3 = null;
+    await this.setWorldData();
+  }
+
   async init() {
     await this.setLastUpdate();
-    await this.setGlobalData();
-    await this.setCountryData(this.selectedCountryIso3);
-    setInterval(async () => {
-      await this.updateData();
-    }, 600000);
+    await this.setCountryTabsData();
+    await this.setWorldData();
+    await this.chart.init();
+    this.chart.setDefaultChart();
   }
 
   async changeIsTotalState() {
     this.isTotal = !this.isTotal;
-    await this.setGlobalData();
-    await this.setCountryData(this.selectedCountryIso3);
+    await this.setCountryTabsData();
+    if (this.selectedCountryIso3) {
+      await this.setCountryData(this.selectedCountryIso3);
+    } else {
+      await this.setWorldData();
+    }
   }
 
   async changeIsDividedState() {
     this.isDivided = !this.isDivided;
-    await this.setGlobalData();
-    await this.setCountryData(this.selectedCountryIso3);
+    await this.setCountryTabsData();
+    if (this.selectedCountryIso3) {
+      await this.setCountryData(this.selectedCountryIso3);
+    } else {
+      await this.setWorldData();
+    }
   }
 
   async getDataByCountry(iso3) {

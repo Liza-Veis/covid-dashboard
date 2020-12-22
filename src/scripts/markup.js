@@ -235,13 +235,16 @@ function Header() {
   this.menuBtn = create('div', 'menu-button');
   this.menuList = create('ul', 'menu-list');
   this.news = create('li', 'menu-list__item');
+  this.reset = create('li', 'menu-list__item');
   this.newsList = create('div', 'news-list');
   const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
 
   this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
   this.news.textContent = 'Last news';
+  this.reset.textContent = 'Show global data';
   this.menuBtn.append(burgerImage);
   this.menuList.append(this.news);
+  this.menuList.append(this.reset);
   this.nav.append(this.search);
   this.nav.append(this.menuBtn);
   this.nav.append(this.menuList);

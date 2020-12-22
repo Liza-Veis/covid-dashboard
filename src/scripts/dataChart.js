@@ -1,11 +1,9 @@
-/* eslint-disable max-len */
 import Chart from 'chart.js';
 
 class DataChart {
   constructor(canvas) {
     this.canvas = canvas;
     this.url = 'https://disease.sh/v3/covid-19/historical/all';
-    this.startDate = '2020-03-01T00:00:00Z';
     this.lastUpdated = null;
     this.titles = ['Total confirmed', 'Total deaths', 'Total recovered'];
     this.chartParams = ['cases', 'deaths', 'recovered'];
@@ -40,13 +38,16 @@ class DataChart {
     this.chart.destroy();
     if (value === 'country total' || value === 'country daily') {
       const country = document.querySelector('.statistics__country-name');
-      const response = await fetch(`https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`);
-      const data = await response.json();
-      let dataForUpdate = null;
-      if (value === 'country total') {
-        dataForUpdate = [data.cases, data.deaths, data.recovered];
-      } else {
-        dataForUpdate = [data.todayCases, data.todayDeaths, data.todayRecovered];
+      const attribute = country.getAttribute('data-iso3');
+      let dataForUpdate = [null, null, null];
+      if (attribute) {
+        const response = await fetch(`https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`);
+        const data = await response.json();
+        if (value === 'country total') {
+          dataForUpdate = [data.cases, data.deaths, data.recovered];
+        } else {
+          dataForUpdate = [data.todayCases, data.todayDeaths, data.todayRecovered];
+        }
       }
       this.chart = new Chart(this.canvas, {
         type: 'horizontalBar',
@@ -59,7 +60,7 @@ class DataChart {
           options: this.options
         }
       });
-      this.chart.options.title.text = country.textContent;
+      this.chart.options.title.text = attribute ? country.textContent : 'Country not selected';
       this.chart.options.scales.yAxes[0].ticks.beginAtZero = true;
     } else if (value === 'daily') {
       const dataForUpdate = await this.getDailyData();
@@ -107,22 +108,10 @@ class DataChart {
     return candidate.updated;
   }
 
-  async updateData() {
-    const candidate = await this.getCandidate();
-    if (candidate !== this.lastUpdated) {
-      clearInterval(this.interval);
-      this.init();
-      this.setDefaultChart();
-    }
-  }
-
-  setDefaultChart() {
-    document.querySelector('.graph__select').setAttribute('data-value', 'cases');
-    document.querySelector('.graph__option.graph__option--current').textContent = 'Cases';
-  }
-
   async init() {
-    if (this.chart) this.chart.destroy();
+    if (this.chart) {
+      this.chart.destroy();
+    }
     const allData = await this.getGlobalData();
     const dataArray = (Object.entries(allData.cases));
     const dataValues = [];
@@ -163,9 +152,7 @@ class DataChart {
         }
       }
     });
-    this.interval = setInterval(async () => {
-      await this.updateData();
-    }, 600000);
+    clearInterval(this.interval);
     this.options = Object.assign({}, this.chart.options);
   }
 }
