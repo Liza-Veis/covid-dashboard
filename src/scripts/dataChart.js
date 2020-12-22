@@ -12,7 +12,6 @@ class DataChart {
 
   async getGlobalData() {
     const response = await fetch(this.url);
-    console.log(this.url);
     const data = await response.json();
     return data;
   }
@@ -73,7 +72,7 @@ class DataChart {
       const dataLabels = [];
       const index = this.chartParams.indexOf(value);
       dataArray.forEach((item) => {
-        dataLabels.push(item[0].slice(0, 5));
+        dataLabels.push(item[0]);
         dataValues.push(item[1]);
       });
       this.chart = new Chart(this.canvas, {
@@ -92,11 +91,6 @@ class DataChart {
     this.chart.options.title.display = true;
     this.chart.options.legend.display = false;
     this.chart.update();
-  }
-
-  async getCandidate() {
-    const candidate = await (await fetch('https://disease.sh/v3/covid-19/all')).json();
-    return candidate.updated;
   }
 
   async init() {
