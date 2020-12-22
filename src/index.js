@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
   const searcher = new Search(countriesList.search, 'countries-list__item');
   const news = new News();
+  const periodButtons = [document.querySelector('#period-switch'), document.querySelector('#period-switch_tabs')];
+  const dataButtons = [document.querySelector('#data-display-switch'), document.querySelector('#data-display-switch_tabs')];
 
   await covid.init();
   await chart.init();
@@ -80,20 +82,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  document.querySelector('#period-switch').addEventListener('click', async function () {
-    this.classList.toggle('active');
-    await covid.changeIsTotalState();
-    interactiveMap.setState(covid.isTotal, covid.isDivided);
-    if (covid.isTotal !== graph.isTotal) {
-      graph.isTotal = covid.isTotal;
-      graph.changeOption(covid.isTotal ? interactiveMap.option : 'daily', true);
-    }
+  periodButtons.forEach((item) => {
+    item.addEventListener('click', async function () {
+      this.classList.toggle('active');
+      await covid.changeIsTotalState();
+      interactiveMap.setState(covid.isTotal, covid.isDivided);
+      if (covid.isTotal !== graph.isTotal) {
+        graph.isTotal = covid.isTotal;
+        graph.changeOption(covid.isTotal ? interactiveMap.option : 'daily', true);
+      }
+    });
   });
 
-  document.querySelector('#data-display-switch').addEventListener('click', async function () {
-    this.classList.toggle('active');
-    await covid.changeIsDividedState();
-    interactiveMap.setState(covid.isTotal, covid.isDivided);
+  dataButtons.forEach((item) => {
+    item.addEventListener('click', async function () {
+      this.classList.toggle('active');
+      await covid.changeIsDividedState();
+      interactiveMap.setState(covid.isTotal, covid.isDivided);
+    });
   });
 
   header.newsList.append(await news.createNewsList());
