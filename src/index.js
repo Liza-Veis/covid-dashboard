@@ -28,20 +28,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   await searcher.init();
   await interactiveMap.init(covid.getData());
 
-  async function setDefault(covidObj, interactiveMapObj, chartObj) {
+  async function setDefault(covidObj, interactiveMapObj, graphObj) {
     await covidObj.resetSelectedCountry();
-    interactiveMapObj.selectedLayer = [];
-    interactiveMapObj.changeOption('cases');
-    countriesList.selectTabNav('cases');
-    await chartObj.getDataByValue('cases');
-    const activePopup = document.querySelector('.leaflet-popup.popup.leaflet-zoom-animated.active');
-    if (activePopup) {
-      activePopup.querySelector('.popup__close').click();
-      activePopup.classList.remove('active');
-    }
+    interactiveMapObj.closePopup();
+    graphObj.isCountrySelected = false;
+    graphObj.changeOption(interactiveMapObj.option, true);
   }
 
-  const updater = new Updater(covid, chart, interactiveMap, setDefault, 300000);
+  const updater = new Updater(covid, interactiveMap, graph, setDefault, 300000);
   updater.init();
 
   document.getElementById('updater').addEventListener('change', function () {
@@ -75,9 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentCountryIso3 === iso3) return;
 
     await covid.setCountryData(iso3);
-    if (!graph.isCountrySelected) {
-      graph.isCountrySelected = true;
-    }
+    graph.isCountrySelected = true;
     graph.changeOption('country total', true);
   });
 
@@ -122,11 +114,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (header.newsList.classList.contains('active')) {
       header.newsList.classList.remove('active');
     }
-    await setDefault(covid, interactiveMap, chart);
+    await setDefault(covid, interactiveMap, graph);
   });
 
   interactiveMap.onPopupClose(async () => {
-    await setDefault(covid, interactiveMap, chart);
+    await setDefault(covid, interactiveMap, graph);
   });
 
   document.querySelectorAll('.fullscreen').forEach((item) => {
