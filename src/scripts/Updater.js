@@ -1,8 +1,8 @@
 class Updater {
-  constructor(covidObj, chartObj, mapObj, resetFunc, startTimeInterval) {
+  constructor(covidObj, mapObj, graphObj, resetFunc, startTimeInterval) {
     this.covidObj = covidObj;
-    this.chartObj = chartObj;
     this.mapObj = mapObj;
+    this.graphObj = graphObj;
     this.resetFunc = resetFunc;
     this.TimeInterval = startTimeInterval;
     this.interval = null;
@@ -12,9 +12,8 @@ class Updater {
     if (this.interval) clearInterval(this.interval);
     this.interval = setInterval(async () => {
       await this.covidObj.init();
-      await this.chartObj.init();
       await this.mapObj.setData(this.covidObj.getData());
-      this.resetFunc(this.covidObj, this.mapObj, this.chartObj);
+      this.resetFunc(this.covidObj, this.mapObj, this.graphObj);
     }, this.TimeInterval);
   }
 

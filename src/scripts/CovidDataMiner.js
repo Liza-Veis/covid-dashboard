@@ -65,6 +65,7 @@ class CovidDataMiner {
   async setWorldData() {
     const response = await fetch('https://disease.sh/v3/covid-19/all');
     const data = await response.json();
+    this.countryNameSelector.dataset.iso3 = '';
     this.countryNameSelector.innerHTML = 'Global';
     this.countryCasesSelector.innerHTML = this.isTotal ? data.cases : data.todayCases;
     this.countryDeathsSelector.innerHTML = this.isTotal ? data.deaths : data.todayDeaths;
