@@ -42,8 +42,9 @@
 .legend {
   position: relative;
   padding: 8px;
-  background: $parts-bg-color;
-  border: 2px solid $border-color;
+  background-color: $parts-bg-color;
+  background-image: $gradient;
+  border: 1px solid $main-color;
   cursor: pointer;
   &__icon {
     display: block;

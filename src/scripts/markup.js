@@ -1,3 +1,5 @@
+const capitalize = (str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
+
 function create(tagname, classname, id, attr) {
   const elem = document.createElement(tagname);
   if (classname) elem.classList.add(classname);
@@ -59,41 +61,48 @@ function CountriesList() {
   this.cases = create('div');
   this.deaths = create('div');
   this.recovered = create('div');
-  this.tabs = create('div', 'tabs');
-  this.searchWrapper = create('div', 'search-wrapper');
-  this.search = create('input', null, 'search', ['type', 'text']);
-  this.keyboardBtn = create('button', 'search-btn', 'keyboard');
-  this.keyboardBtn.innerHTML = '<img src="../assets/icons/keyboard.svg" class="keyboard-image"/>';
+  this.tabs = create('div', 'countries-list__tabs');
+  this.select = create('div', 'countries-list__select', null, ['data-value', 'cases']);
+  this.currentOption = create('div', 'countries-list__option');
 
-  const tabsFooter = create('div', 'tabs__footer');
   const periodSwitch = createSwitch('statistics__switch', 'period-switch_tabs', 'daily');
-  const dataDisplaySwitch = createSwitch('statistics__switch', 'data-display-switch_tabs', 'per 100k');
+  const dataDisplaySwitch = createSwitch(
+    'statistics__switch',
+    'data-display-switch_tabs',
+    'per 100k'
+  );
 
-  this.selectTabNav = undefined;
+  this.searchWrapper = create('div', 'search__wrapper');
+  this.search = create('input', null, 'search', ['placeholder', 'Select...']);
+  this.keyboardBtn = create('button', 'search__btn', 'keyboard');
+  this.keyboardBtn.innerHTML = `<svg viewBox="0 0 29 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M26.6667 0H1.77778C1.30628 0 0.854097 0.187301 0.520699 0.520699C0.187301 0.854098 0 1.30628 0 1.77778V16C0 16.4715 0.187301 16.9237 0.520699 17.2571C0.854097 17.5905 1.30628 17.7778 1.77778 17.7778H26.6667C27.1382 17.7778 27.5903 17.5905 27.9237 17.2571C28.2571 16.9237 28.4444 16.4715 28.4444 16V1.77778C28.4444 1.30628 28.2571 0.854098 27.9237 0.520699C27.5903 0.187301 27.1382 0 26.6667 0V0ZM26.6667 16H1.77778V1.77778H26.6667V16Z" fill="currentColor"/>
+  <path d="M4.44446 4.44446H6.22223V6.22224H4.44446V4.44446Z" fill="currentColor"/>
+  <path d="M8 4.44446H9.77778V6.22224H8V4.44446Z" fill="currentColor"/>
+  <path d="M11.5556 4.44446H13.3334V6.22224H11.5556V4.44446Z" fill="currentColor"/>
+  <path d="M15.1111 4.44446H16.8889V6.22224H15.1111V4.44446Z" fill="currentColor"/>
+  <path d="M18.6667 4.44446H20.4445V6.22224H18.6667V4.44446Z" fill="currentColor"/>
+  <path d="M22.2222 4.44446H24V6.22224H22.2222V4.44446Z" fill="currentColor"/>
+  <path d="M4.44446 8H6.22223V9.77778H4.44446V8Z" fill="currentColor"/>
+  <path d="M8 8H9.77778V9.77778H8V8Z" fill="currentColor"/>
+  <path d="M11.5556 8H13.3334V9.77778H11.5556V8Z" fill="currentColor"/>
+  <path d="M15.1111 8H16.8889V9.77778H15.1111V8Z" fill="currentColor"/>
+  <path d="M18.6667 8H20.4445V9.77778H18.6667V8Z" fill="currentColor"/>
+  <path d="M22.2222 8H24V9.77778H22.2222V8Z" fill="currentColor"/>
+  <path d="M22.2222 12.4445H23.9467V14.2222H22.2222V12.4445Z" fill="currentColor"/>
+  <path d="M4.44446 12.4445H6.22223V14.2222H4.44446V12.4445Z" fill="currentColor"/>
+  <path d="M8.11557 12.4445H20.3378V14.2222H8.11557V12.4445Z" fill="currentColor"/>
+  </svg>`;
 
-  this.onTabChange = (func) => {
+  this.changeOption = undefined;
+
+  this.onOptionChange = (func) => {
     if (func) {
-      this.onTabChange = () => func(this.tabs.dataset.value);
+      this.onOptionChange = () => func(this.select.dataset.value);
     }
   };
 
-  const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
-	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
-
-  const tabsNav = create('div', 'tabs__nav');
-  const tabsContent = create('div', 'tabs__content');
-
-  const casesTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'cases']);
-  const deathsTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'deaths']);
-  const recoveredTab = create('div', 'tabs-nav__item', null, ['data-tab-name', 'recovered']);
-
-  this.tabs.classList.add('countries-list__tabs');
-  tabsNav.classList.add('tabs-nav');
-
-  this.tabs.dataset.value = 'cases';
   this.cases.classList.add('active');
-  casesTab.classList.add('active');
 
   this.cases.classList.add('tab');
   this.deaths.classList.add('tab');
@@ -103,48 +112,84 @@ function CountriesList() {
   this.deaths.setAttribute('data-tab-content', 'deaths');
   this.recovered.setAttribute('data-tab-content', 'recovered');
 
-  casesTab.textContent = 'Cases';
-  deathsTab.textContent = 'Deaths';
-  recoveredTab.textContent = 'Recovered';
+  const countriesListFooter = create('div', 'countries-list__footer');
+  const countriesListHeader = create('div', 'countries-list__header');
+  const btnLeft = create('button', 'countries-list__btn');
+  const btnRight = create('button', 'countries-list__btn');
+  const list = create('ul', 'countries-list__list');
 
-  const selectTabContent = (tabName) => {
-    const tab = tabsContent.querySelector(`[data-tab-content="${tabName}"]`);
-    const tabsItems = [...tabsContent.querySelectorAll('.tab')];
-    tabsItems.forEach((elem) => elem.classList.remove('active'));
+  const cases = create('li', 'countries-list__option', null, ['data-value', 'cases']);
+  const deaths = create('li', 'countries-list__option', null, ['data-value', 'deaths']);
+  const recovered = create('li', 'countries-list__option', null, ['data-value', 'recovered']);
+
+  const fullScreener = create('div', 'fullscreen');
+  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
+	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+
+  this.currentOption.classList.add('countries-list__option--current');
+  btnLeft.classList.add('countries-list__btn--left');
+  btnRight.classList.add('countries-list__btn--right');
+
+  const options = [cases, deaths, recovered];
+
+  options.forEach((elem) => {
+    const option = elem;
+    option.textContent = capitalize(elem.dataset.value);
+  });
+
+  this.currentOption.textContent = capitalize(this.select.dataset.value);
+
+  this.changeOption = (value) => {
+    if (this.select.dataset.value === value) return;
+    this.currentOption.textContent = capitalize(value);
+    this.select.dataset.value = value;
+    this.onOptionChange();
+
+    const tab = this.tabs.querySelector(`[data-tab-content="${value}"]`);
+    const tabs = [...this.tabs.querySelectorAll('.tab.active')];
+    tabs.forEach((elem) => elem.classList.remove('active'));
     tab.classList.add('active');
   };
 
-  this.selectTabNav = (tabName) => {
-    if (this.tabs.dataset.value === tabName) return;
-
-    const navItems = [...tabsNav.querySelectorAll('.tabs-nav__item')];
-    const tabNav = navItems.find((item) => item.getAttribute('data-tab-name') === tabName);
-
-    if (!tabNav) return;
-
-    this.tabs.dataset.value = tabName;
-    navItems.forEach((elem) => {
-      elem.classList.remove('active');
-    });
-
-    tabNav.classList.add('active');
-    selectTabContent(tabName);
-    this.onTabChange();
+  const getNextOption = (next) => {
+    const curIdx = options.findIndex((elem) => elem.dataset.value === this.select.dataset.value);
+    let idx = next ? (curIdx + 1) % options.length : curIdx - 1;
+    if (idx < 0) idx = options.length + idx;
+    return options[idx];
   };
 
-  tabsNav.addEventListener('click', (e) => {
-    if (e.target.dataset.tabName) {
-      this.selectTabNav(e.target.dataset.tabName);
+  btnLeft.addEventListener('click', () => {
+    const option = getNextOption(false);
+    this.changeOption(option.dataset.value);
+  });
+  btnRight.addEventListener('click', () => {
+    const option = getNextOption(true);
+    this.changeOption(option.dataset.value);
+  });
+  list.addEventListener('click', (event) => {
+    if (!event.target.classList.contains('countries-list__option')) return;
+    this.changeOption(event.target.dataset.value);
+  });
+
+  function toggleList() {
+    list.classList.toggle('active');
+  }
+
+  this.currentOption.addEventListener('click', () => toggleList());
+  document.addEventListener('click', (e) => {
+    if (e.target !== this.currentOption && list.classList.contains('active')) {
+      toggleList();
+      document.onclick = false;
     }
   });
 
-  tabsContent.append(this.cases, this.deaths, this.recovered);
-  tabsNav.append(casesTab, deathsTab, recoveredTab);
-
-  tabsFooter.append(periodSwitch, dataDisplaySwitch);
+  list.append(cases, deaths, recovered);
+  this.select.append(list, this.currentOption);
+  countriesListFooter.append(btnLeft, this.select, btnRight);
+  this.tabs.append(this.cases, this.deaths, this.recovered);
   this.searchWrapper.append(this.search, this.keyboardBtn);
-  this.tabs.append(tabsNav, tabsContent);
-  this.elem.append(this.searchWrapper, this.tabs, tabsFooter, fullScreener);
+  countriesListHeader.append(this.searchWrapper, periodSwitch, dataDisplaySwitch);
+  this.elem.append(countriesListHeader, this.tabs, countriesListFooter, fullScreener);
 }
 
 function Graph() {
@@ -184,8 +229,6 @@ function Graph() {
   btnRight.classList.add('graph__btn--right');
 
   const options = [cases, deaths, recovered, daily, countryTotal, countryDaily];
-
-  const capitalize = (str) => `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
 
   options.forEach((elem) => {
     const option = elem;
@@ -273,9 +316,10 @@ function Header() {
   this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
   this.news.textContent = 'Last news';
   this.reset.textContent = 'Show global data';
-  this.updateTime.innerHTML = '<option disabled selected>Select update data time</option><option value=60000>1 minute</option>'
-  + '<option value=300000>5 minutes</option><option value=900000>15 minutes</option>'
-  + '<option value=1800000>30 minutes</option><option value=3600000>1 hour</option>';
+  this.updateTime.innerHTML = `
+  <option disabled selected>Select update data time</option><option value=60000>1 minute</option>
+  <option value=300000>5 minutes</option><option value=900000>15 minutes</option>
+  <option value=1800000>30 minutes</option><option value=3600000>1 hour</option>`;
   this.menuBtn.append(burgerImage);
   this.menuList.append(this.news, this.reset, this.updateTime);
   this.elem.append(this.menuBtn, this.menuList, this.newsList);
@@ -295,7 +339,13 @@ const countriesList = new CountriesList();
 const graph = new Graph();
 const header = new Header();
 
-footer.textContent = 'Footer';
+footer.innerHTML = `
+<a class="footer__logo" href="https://rs.school/js/"><img src="assets/images/logo.png" alt="RS-School"></a>
+<div class="footer__text">Made by
+<a href="https://github.com/ParfenenkovEdit">@ParfenenkovEdit</a> and
+<a href="https://github.com/Liza-Veis">@Liza-Veis in 2020</a>
+</div>
+`;
 
 container.append(countriesList.elem, map, statistics.elem, graph.elem);
 document.body.append(header.elem, container, footer);

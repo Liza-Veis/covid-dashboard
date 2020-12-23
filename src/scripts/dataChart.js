@@ -6,7 +6,7 @@ class DataChart {
     this.url = 'https://disease.sh/v3/covid-19/historical/all?lastdays=all';
     this.titles = ['Total confirmed', 'Total deaths', 'Total recovered'];
     this.chartParams = ['cases', 'deaths', 'recovered'];
-    this.bgColors = ['rgba(247, 202, 24, 1)', 'rgba(246, 36, 89, 1)', 'rgba(35, 203, 167, 1)'];
+    this.bgColors = ['rgba(240, 63, 131, 1)', 'rgba(240, 190, 63, 1)', 'rgba(77, 240, 63, 1)'];
     this.chart = null;
   }
 
@@ -30,7 +30,9 @@ class DataChart {
       const attribute = country.getAttribute('data-iso3');
       let dataForUpdate = [null, null, null];
       if (attribute) {
-        const response = await fetch(`https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`);
+        const response = await fetch(
+          `https://disease.sh/v3/covid-19/countries/${country.getAttribute('data-iso3')}`
+        );
         const data = await response.json();
         if (value === 'country total') {
           dataForUpdate = [data.cases, data.deaths, data.recovered];
@@ -42,10 +44,12 @@ class DataChart {
         type: 'horizontalBar',
         data: {
           labels: this.chartParams,
-          datasets: [{
-            data: dataForUpdate,
-            backgroundColor: this.bgColors
-          }],
+          datasets: [
+            {
+              data: dataForUpdate,
+              backgroundColor: this.bgColors
+            }
+          ],
           options: this.options
         }
       });
@@ -57,17 +61,19 @@ class DataChart {
         type: 'horizontalBar',
         data: {
           labels: this.chartParams,
-          datasets: [{
-            data: dataForUpdate,
-            backgroundColor: this.bgColors
-          }],
+          datasets: [
+            {
+              data: dataForUpdate,
+              backgroundColor: this.bgColors
+            }
+          ],
           options: this.options
         }
       });
       this.chart.options.title.text = 'Daily cases';
     } else {
       const data = await this.getGlobalData();
-      const dataArray = (Object.entries(data[value]));
+      const dataArray = Object.entries(data[value]);
       const dataValues = [];
       const dataLabels = [];
       const index = this.chartParams.indexOf(value);
@@ -79,10 +85,12 @@ class DataChart {
         type: 'bar',
         data: {
           labels: dataLabels,
-          datasets: [{
-            data: dataValues,
-            backgroundColor: this.bgColors[index]
-          }]
+          datasets: [
+            {
+              data: dataValues,
+              backgroundColor: this.bgColors[index]
+            }
+          ]
         },
         options: this.options
       });
@@ -108,10 +116,12 @@ class DataChart {
       type: 'bar',
       data: {
         labels: dataLabels,
-        datasets: [{
-          data: dataValues,
-          backgroundColor: this.bgColors[0]
-        }]
+        datasets: [
+          {
+            data: dataValues,
+            backgroundColor: this.bgColors[0]
+          }
+        ]
       },
       options: {
         title: {
@@ -122,21 +132,25 @@ class DataChart {
           labels: ''
         },
         scales: {
-          xAxes: [{
-            stacked: true,
-            type: 'time',
-            time: {
-              unit: 'month'
+          xAxes: [
+            {
+              stacked: true,
+              type: 'time',
+              time: {
+                unit: 'month'
+              }
             }
-          }],
-          yAxes: [{
-            display: true,
-            ticks: {
-              beginAtZero: false,
-              stepSize: 1000,
-              maxTicksLimit: 15
+          ],
+          yAxes: [
+            {
+              display: true,
+              ticks: {
+                beginAtZero: false,
+                stepSize: 1000,
+                maxTicksLimit: 15
+              }
             }
-          }]
+          ]
         }
       }
     });

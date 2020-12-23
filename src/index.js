@@ -23,8 +23,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
   const searcher = new Search(countriesList.search, 'countries-list__item');
   const news = new News();
-  const periodButtons = [document.querySelector('#period-switch'), document.querySelector('#period-switch_tabs')];
-  const dataButtons = [document.querySelector('#data-display-switch'), document.querySelector('#data-display-switch_tabs')];
+  const periodButtons = [
+    document.querySelector('#period-switch'),
+    document.querySelector('#period-switch_tabs')
+  ];
+  const dataButtons = [
+    document.querySelector('#data-display-switch'),
+    document.querySelector('#data-display-switch_tabs')
+  ];
 
   await covid.init();
   await chart.init();
@@ -54,18 +60,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   graph.onOptionChange(async (value) => {
     if (['cases', 'deaths', 'recovered'].indexOf(value) !== -1) {
       interactiveMap.changeOption(value);
-      countriesList.selectTabNav(value);
+      countriesList.changeOption(value);
     }
     chart.getDataByValue(value);
   });
 
-  countriesList.onTabChange(async (value) => {
+  countriesList.onOptionChange(async (value) => {
     interactiveMap.changeOption(value);
     graph.changeOption(value, true);
   });
 
   interactiveMap.onOptionChange((value) => {
-    countriesList.selectTabNav(value);
+    countriesList.changeOption(value);
   });
 
   interactiveMap.onCountrySelect(async (iso3) => {

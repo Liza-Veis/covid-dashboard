@@ -45,7 +45,7 @@ class CovidDataMiner {
     this.countryNameSelector.innerHTML = data.country;
     this.countryNameSelector.setAttribute('data-iso3', this.selectedCountryIso3);
     if (!this.isHandled) {
-      document.querySelector('.tabs__content').addEventListener('click', await this.countryListClickHandler.bind(this), false);
+      document.querySelector('.countries-list__tabs').addEventListener('click', await this.countryListClickHandler.bind(this), false);
       this.isHandled = true;
     }
     document.querySelector('#search').value = '';
