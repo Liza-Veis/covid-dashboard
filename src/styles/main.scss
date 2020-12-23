@@ -414,6 +414,7 @@ body {
 }
 
 @import './map.scss';
+@import './keyboard.scss';
 
 #search {
   width: 80%;
@@ -563,6 +564,7 @@ select, option {
   justify-content: center;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .search-btn {
@@ -584,4 +586,8 @@ select, option {
   &:active, &:focus {
     outline: none;
   }
+}
+
+.keyboard {
+  background: $body-bg-color;
 }

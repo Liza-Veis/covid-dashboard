@@ -5,6 +5,7 @@ import DataChart from './scripts/DataChart';
 import InteractiveMap from './scripts/InteractiveMap';
 import News from './scripts/News';
 import Updater from './scripts/Updater';
+import Keyboard from './scripts/Keyboard';
 import { header, countriesList, statistics, graph, map } from './scripts/markup.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await chart.init();
   await searcher.init();
   await interactiveMap.init(covid.getData());
+  Keyboard.init();
 
   async function setDefault(covidObj, interactiveMapObj, graphObj) {
     await covidObj.resetSelectedCountry();
