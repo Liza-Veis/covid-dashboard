@@ -3,16 +3,24 @@
 
 $font-family: 'Nunito', sans-serif;
 
-$font-color: #c3c3c3;
-$body-bg-color: #13110d;
-$parts-bg-color: #2f2d28;
+$font-color: #9d97a5;
+$font-color-light: #c3c3c3;
+$body-bg-color: #171430;
+$parts-bg-color: #141324;
 
-$cases-color: #d32828;
-$deaths-color: $font-color;
-$recovered-color: #66c31d;
+$cases-color: #f03f83; //rgb(240, 63, 131)
+$deaths-color: #f0be3f; //rgb(240, 190, 63)
+$recovered-color: #4df03f; //rgb(77, 240, 63)
+$main-color: #777be4;
 $border-color: #464646;
 
 $border: 1px solid $border-color;
+$gradient: linear-gradient(
+  180deg,
+  rgba(119, 123, 228, 0.13) 0%,
+  rgba(104, 107, 199, 0.13) 21.63%,
+  rgba(20, 19, 36, 0.13) 139.95%
+);
 
 @mixin select {
   &__btn {
@@ -26,10 +34,10 @@ $border: 1px solid $border-color;
     border-top-width: 7px;
     border-bottom-width: 7px;
     &--left {
-      border-right: 7px solid $font-color;
+      border-right: 7px solid $font-color-light;
     }
     &--right {
-      border-left: 7px solid $font-color;
+      border-left: 7px solid $font-color-light;
     }
   }
   &__select {
@@ -38,6 +46,7 @@ $border: 1px solid $border-color;
     max-width: 200px;
     width: 100%;
     text-align: center;
+    color: $font-color-light;
   }
   &__list {
     display: none;
@@ -46,7 +55,7 @@ $border: 1px solid $border-color;
     bottom: 100%;
     list-style: none;
     text-align: left;
-    background: lighten($body-bg-color, 5%);
+    background: $body-bg-color;
     border: $border;
     &.active {
       display: block;
@@ -89,7 +98,7 @@ $border: 1px solid $border-color;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba($main-color, 0.25);
   border-right: 5px solid transparent;
   border-bottom: 5px solid transparent;
   background-clip: padding-box;
@@ -97,7 +106,7 @@ $border: 1px solid $border-color;
 
 ::-webkit-scrollbar-thumb {
   width: 8px;
-  background: rgba(255, 255, 255, 0.3);
+  background: $main-color;
   border-right: 5px solid transparent;
   border-bottom: 5px solid transparent;
   background-clip: padding-box;
@@ -121,7 +130,8 @@ body {
     width: 40px;
     height: 20px;
     padding: 2px;
-    background-color: $border-color;
+    background-color: lighten($parts-bg-color, 5%);
+    box-shadow: 0px 0px 3px $main-color;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -129,7 +139,7 @@ body {
   &__circle {
     width: 16px;
     height: 16px;
-    background-color: $body-bg-color;
+    background-color: $main-color;
     border-radius: 50%;
     transition: all 0.3s ease;
   }
@@ -138,11 +148,11 @@ body {
   }
   &.active {
     .switch__btn {
-      background-color: $cases-color;
+      background-color: $main-color;
     }
     .switch__circle {
       transform: translate(19px);
-      background-color: $font-color;
+      background-color: $parts-bg-color;
     }
   }
 }
@@ -154,7 +164,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: $parts-bg-color;
   border: $border;
 
   &__title {
@@ -162,72 +171,28 @@ body {
   }
 }
 
-.tabs {
-  position: relative;
-  height: calc(100% - 95px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  &__content {
-    height: calc(100% - 40px);
-    overflow: auto;
-  }
-  &__footer {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 10px;
-  }
-}
-
-.tabs-nav {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  font-size: 0.875rem;
-  border-bottom: $border;
-  cursor: pointer;
-  &__item {
-    flex-grow: 1;
-    padding: 10px;
-    background: $body-bg-color;
-    color: rgba($font-color, 0.7);
-    &.active {
-      background: $parts-bg-color;
-      border-right: $border;
-      border-left: $border;
-      color: $font-color;
-    }
-    &:first-child {
-      border-left: none;
-    }
-    &:last-child {
-      border-right: none;
-    }
-  }
-}
-
-.tab {
-  display: none;
-  flex-direction: column;
-  height: 100%;
-  &.active {
-    display: flex;
-  }
-}
-
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   min-height: 50px;
   padding: 10px 20px;
   margin-top: 10px;
-  font-size: 1.5rem;
+  font-size: 0.875rem;
   background-color: $parts-bg-color;
   border: $border;
+  &__logo {
+    margin-right: 15px;
+    width: 85px;
+    img {
+      width: 100%;
+    }
+  }
+  a {
+    text-decoration: none;
+    color: lighten($main-color, 5%);
+  }
 }
 
 .main {
@@ -247,9 +212,15 @@ body {
 .countries-list {
   grid-area: countriesList;
   background-color: $parts-bg-color;
+  background-image: $gradient;
   border: $border;
   position: relative;
-
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 10px 15px;
+    border-bottom: $border;
+  }
   &__item {
     border-bottom: $border;
     padding: 5px 10px;
@@ -258,18 +229,6 @@ body {
     &:last-child {
       border-bottom: none;
     }
-  }
-  &__flag {
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg');
-    width: 29px;
-    height: 19px;
-    display: inline-block;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-left: 10px;
-    position: relative;
-    top: 3px;
   }
   &__number {
     display: block;
@@ -295,11 +254,38 @@ body {
     position: relative;
     top: 3px;
   }
+  &__tabs {
+    position: relative;
+    height: calc(100% - 140px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+
+    .tab {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      &.active {
+        display: flex;
+      }
+    }
+  }
+  &__footer {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 0;
+    background-image: $gradient;
+  }
+  @include select();
 }
 
 .statistics {
   grid-area: statistics;
   background-color: $parts-bg-color;
+  background-image: $gradient;
   border: $border;
   position: relative;
 
@@ -356,6 +342,7 @@ body {
 .graph {
   grid-area: graph;
   background-color: $parts-bg-color;
+  background-image: $gradient;
   border: $border;
   position: relative;
   display: flex;
@@ -366,6 +353,8 @@ body {
     justify-content: space-between;
     text-align: center;
     align-items: center;
+    background-image: $gradient;
+    padding: 3px 0;
   }
   @include select();
 }
@@ -388,12 +377,14 @@ body {
     display: flex;
     align-items: center;
     min-width: 200px;
-    background: $parts-bg-color;
-    border: 2px solid $border-color;
+    border: 1px solid $main-color;
+    background-color: $parts-bg-color;
+    background-image: $gradient;
   }
   &__select {
     display: flex;
     justify-content: center;
+    color: $font-color;
   }
   &__list {
     bottom: 0;
@@ -402,6 +393,12 @@ body {
   }
   &__btn {
     margin: 0 15px;
+    &--left {
+      border-right-color: $font-color;
+    }
+    &--right {
+      border-left-color: $font-color;
+    }
   }
   &__option:last-child {
     width: 100%;
@@ -419,10 +416,18 @@ body {
 #search {
   width: 80%;
   font-size: 1.125rem;
-  padding: 5px 10px;
+  padding: 5px 0;
   border: none;
   outline: none;
   border-radius: 0;
+  background: transparent;
+  border-bottom: 1px solid $font-color;
+  color: $font-color;
+  font-family: inherit;
+  font-size: 1.25rem;
+  &::placeholder {
+    color: inherit;
+  }
 }
 
 [data-hide] {
@@ -553,39 +558,32 @@ body {
   color: $font-color;
 }
 
-select, option {
+select,
+option {
   text-align: center;
   text-align-last: center;
   -moz-text-align-last: center;
 }
 
-.search-wrapper {
+.search__wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   position: relative;
+  margin-bottom: 20px;
 }
 
-.search-btn {
-  width: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  background: none;
-
-  & > img {
-    height: 30px;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:active, &:focus {
-    outline: none;
-  }
+.search__btn {
+  width: 29px;
+  height: 18px;
+  color: $font-color;
+  background-color: transparent;
+  outline: none;
+  border-radius: 0;
+  border: 0;
+  margin-left: 15px;
+  cursor: pointer;
 }
 
 .keyboard {

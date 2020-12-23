@@ -67,9 +67,9 @@ class InteractiveMap {
     };
 
     this.markersColors = {
-      cases: [211, 40, 40],
-      deaths: [195, 195, 195],
-      recovered: [102, 195, 29]
+      cases: [240, 63, 131],
+      deaths: [240, 190, 63],
+      recovered: [77, 240, 63]
     };
 
     this.markersStyle = {
@@ -356,7 +356,7 @@ class InteractiveMap {
 
     const signature = 'UtTqDGnXDAaNToAj-W3j2A';
     const accessToken = `pk.eyJ1IjoibGl6YTQyMDIzIiwiYSI6ImNraXFvcHZlNDAzemQyeW40dnc0N2xzNWgifQ.${signature}`;
-    const styleId = 'ckit31x161j5z19mhkwp7dviu';
+    const styleId = 'ckj1l4w4f9qag19rp8evmrw3r';
     const layerUrl = `https://api.mapbox.com/styles/v1/liza42023/${styleId}/tiles/{z}/{x}/{y}@2x?access_token=${accessToken}`;
 
     const mainLayer = new L.TileLayer(layerUrl, { zoomOffset: -1, tileSize: 512 });

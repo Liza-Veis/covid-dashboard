@@ -40,7 +40,7 @@ const Keyboard = {
     this.elements.keys = this.elements.keyContainer.querySelectorAll('.keyboard__key');
 
     this.elements.main.appendChild(this.elements.keyContainer);
-    document.querySelector('.search-wrapper').appendChild(this.elements.main);
+    document.querySelector('.search__wrapper').appendChild(this.elements.main);
 
     this.properties.rec.lang = this.properties.lang === 'en' ? 'en-Us' : 'ru-RU';
     this.properties.rec.interimResults = false;
