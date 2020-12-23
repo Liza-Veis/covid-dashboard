@@ -1,3 +1,5 @@
+const { DateTime } = require('luxon');
+
 class CovidDataMiner {
   constructor(totalCasesSelector,
     totalDeathsSelector, totalRecoveredSelector, countryCasesSelector,
@@ -70,6 +72,11 @@ class CovidDataMiner {
     this.countryCasesSelector.innerHTML = this.isTotal ? data.cases : data.todayCases;
     this.countryDeathsSelector.innerHTML = this.isTotal ? data.deaths : data.todayDeaths;
     this.countryRecoveredSelector.innerHTML = this.isTotal ? data.recovered : data.todayRecovered;
+
+    const lastUpdate = DateTime.fromMillis(data.updated);
+    document.querySelector('.footer__last-update').textContent = `Last update:
+    ${lastUpdate.year}.${lastUpdate.month}.${lastUpdate.day}
+    in ${lastUpdate.hour}:${lastUpdate.minute}:${lastUpdate.second}`;
   }
 
   async resetSelectedCountry() {
