@@ -60,7 +60,14 @@ function CountriesList() {
   this.deaths = create('div');
   this.recovered = create('div');
   this.tabs = create('div', 'tabs');
+  this.searchWrapper = create('div', 'search-wrapper');
   this.search = create('input', null, 'search', ['type', 'text']);
+  this.keyboardBtn = create('button', 'search-btn', 'keyboard');
+  this.keyboardBtn.innerHTML = '<img src="../assets/icons/keyboard.svg" class="keyboard-image"/>';
+
+  const tabsFooter = create('div', 'tabs__footer');
+  const periodSwitch = createSwitch('statistics__switch', 'period-switch_tabs', 'daily');
+  const dataDisplaySwitch = createSwitch('statistics__switch', 'data-display-switch_tabs', 'per 100k');
 
   this.selectTabNav = undefined;
 
@@ -134,8 +141,10 @@ function CountriesList() {
   tabsContent.append(this.cases, this.deaths, this.recovered);
   tabsNav.append(casesTab, deathsTab, recoveredTab);
 
+  tabsFooter.append(periodSwitch, dataDisplaySwitch);
+  this.searchWrapper.append(this.search, this.keyboardBtn);
   this.tabs.append(tabsNav, tabsContent);
-  this.elem.append(this.search, this.tabs, fullScreener);
+  this.elem.append(this.searchWrapper, this.tabs, tabsFooter, fullScreener);
 }
 
 function Graph() {
@@ -253,7 +262,6 @@ function Graph() {
 
 function Header() {
   this.elem = create('header', 'header');
-  this.nav = create('nav', 'header__nav');
   this.menuBtn = create('div', 'menu-button');
   this.menuList = create('ul', 'menu-list');
   this.news = create('li', 'menu-list__item');
@@ -270,8 +278,7 @@ function Header() {
   + '<option value=1800000>30 minutes</option><option value=3600000>1 hour</option>';
   this.menuBtn.append(burgerImage);
   this.menuList.append(this.news, this.reset, this.updateTime);
-  this.nav.append(this.menuBtn, this.menuList);
-  this.elem.append(this.nav, this.newsList);
+  this.elem.append(this.menuBtn, this.menuList, this.newsList);
 }
 
 const container = create('main', 'main');
