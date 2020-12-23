@@ -307,10 +307,11 @@ function Header() {
   this.elem = create('header', 'header');
   this.menuBtn = create('div', 'menu-button');
   this.menuList = create('ul', 'menu-list');
-  this.news = create('li', 'menu-list__item');
+  this.news = create('button', 'header__nav_news-btn');
   this.reset = create('li', 'menu-list__item');
   this.newsList = create('div', 'news-list');
   this.updateTime = create('select', 'menu-list__item', 'updater');
+  this.nav = create('nav', 'header__nav');
   const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
 
   this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
@@ -324,9 +325,10 @@ function Header() {
   <option value=12>12 hours</option>
   <option value=24>24 hours</option>`;
 
+  this.nav.append(this.news, this.menuBtn);
   this.menuBtn.append(burgerImage);
-  this.menuList.append(this.news, this.reset, this.updateTime);
-  this.elem.append(this.menuBtn, this.menuList, this.newsList);
+  this.menuList.append(this.reset, this.updateTime);
+  this.elem.append(this.nav, this.menuList, this.newsList);
 }
 
 const container = create('main', 'main');

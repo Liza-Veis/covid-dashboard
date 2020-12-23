@@ -163,14 +163,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.addEventListener('click', (event) => {
-    const targetObjects = [header.menuList, header.news, header.reset, header.updateTime,
+    const menuTargetObjects = [header.menuList, header.reset, header.updateTime,
       header.menuBtn, header.menuBtn.firstChild];
-    if (!targetObjects.includes(event.target)) {
-      if (header.newsList.classList.contains('active')) {
-        header.newsList.classList.remove('active');
-      }
+    const newsTargetObjects = [header.news, header.newsList];
+    if (!menuTargetObjects.includes(event.target)) {
       if (header.menuList.classList.contains('active')) {
         header.menuList.classList.remove('active');
+      }
+    }
+    if (!newsTargetObjects.includes(event.target)) {
+      if (header.newsList.classList.contains('active')) {
+        header.newsList.classList.remove('active');
       }
     }
   });

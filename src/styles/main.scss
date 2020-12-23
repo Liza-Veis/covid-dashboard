@@ -169,6 +169,23 @@ body {
   &__title {
     font-size: 1.5rem;
   }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+
+    &_news-btn {
+      background-color: $body-bg-color;
+      border: 1px solid $main-color;
+      color: $font-color-light;
+      padding: 5px 10px;
+      cursor: pointer;
+  
+      &:active, &:focus {
+        outline: none;
+      }
+    }
+  }
 }
 
 .footer {
@@ -468,8 +485,8 @@ body {
   &__item {
     padding: 10px;
     min-width: 150px;
-    background: #13110d;
-    color: $font-color;
+    background: $body-bg-color;
+    color: $font-color-light;
     cursor: pointer;
     text-align: center;
     border: $border;
@@ -532,7 +549,7 @@ body {
   right: 0;
   width: 25px;
   height: 25px;
-  background-color: $border-color;
+  background-color: $main-color;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -563,6 +580,11 @@ option {
   text-align: center;
   text-align-last: center;
   -moz-text-align-last: center;
+}
+
+select:active, select:focus,
+option:focus, option:active {
+  outline: none;
 }
 
 .search__wrapper {

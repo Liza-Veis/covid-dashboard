@@ -54,6 +54,17 @@ class DataChart {
         }
       });
       this.chart.options.title.text = attribute ? country.textContent : 'Country not selected';
+      this.chart.options.scales.xAxes[0].ticks.callback = function (item) {
+        let result;
+        if (item < 1000) {
+          result = item;
+        } else if (item < 1000000) {
+          result = `${Math.ceil(item / 1000)}K`;
+        } else {
+          result = `${Math.ceil(item / 1000000)}M`;
+        }
+        return result;
+      };
       this.chart.options.scales.yAxes[0].ticks.beginAtZero = true;
     } else if (value === 'daily') {
       const dataForUpdate = await this.getDailyData();
@@ -70,6 +81,17 @@ class DataChart {
           options: this.options
         }
       });
+      this.chart.options.scales.xAxes[0].ticks.callback = function (item) {
+        let result;
+        if (item < 1000) {
+          result = item;
+        } else if (item < 1000000) {
+          result = `${Math.ceil(item / 1000)}K`;
+        } else {
+          result = `${Math.ceil(item / 1000000)}M`;
+        }
+        return result;
+      };
       this.chart.options.title.text = 'Daily cases';
     } else {
       const data = await this.getGlobalData();
@@ -95,6 +117,18 @@ class DataChart {
         options: this.options
       });
       this.chart.options.title.text = this.titles[index];
+      this.chart.options.scales.yAxes[0].ticks.callback = function (item) {
+        let result;
+        if (item < 1000) {
+          result = item;
+        } else if (item < 1000000) {
+          result = `${Math.ceil(item / 1000)}K`;
+        } else {
+          result = `${Math.ceil(item / 1000000)}M`;
+        }
+        return result;
+      };
+      this.chart.options.scales.xAxes[0].ticks.callback = (item) => item.slice(0, 3);
     }
     this.chart.options.title.display = true;
     this.chart.options.legend.display = false;
@@ -138,6 +172,9 @@ class DataChart {
               type: 'time',
               time: {
                 unit: 'month'
+              },
+              ticks: {
+                callback: (item) => item.slice(0, 3)
               }
             }
           ],
@@ -147,7 +184,18 @@ class DataChart {
               ticks: {
                 beginAtZero: false,
                 stepSize: 1000,
-                maxTicksLimit: 15
+                maxTicksLimit: 15,
+                callback: function (item) {
+                  let result;
+                  if (item < 1000) {
+                    result = item;
+                  } else if (item < 1000000) {
+                    result = `${Math.ceil(item / 1000)}K`;
+                  } else {
+                    result = `${Math.ceil(item / 1000000)}M`;
+                  }
+                  return result;
+                }
               }
             }
           ]
