@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     graphObj.changeOption(interactiveMapObj.option, true);
   }
 
-  const updater = new Updater(covid, interactiveMap, graph, setDefault, 300000);
+  const updater = new Updater(covid, interactiveMap, graph, setDefault, 1);
   updater.init();
 
   document.getElementById('updater').addEventListener('change', function () {
@@ -84,9 +84,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  periodButtons.forEach((item) => {
+  periodButtons.forEach((item, index, array) => {
     item.addEventListener('click', async function () {
-      this.classList.toggle('active');
+      array.forEach((btn) => btn.classList.toggle('active'));
       await covid.changeIsTotalState();
       interactiveMap.setState(covid.isTotal, covid.isDivided);
       if (covid.isTotal !== graph.isTotal) {
@@ -96,9 +96,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  dataButtons.forEach((item) => {
+  dataButtons.forEach((item, index, array) => {
     item.addEventListener('click', async function () {
-      this.classList.toggle('active');
+      array.forEach((btn) => btn.classList.toggle('active'));
       await covid.changeIsDividedState();
       interactiveMap.setState(covid.isTotal, covid.isDivided);
     });
@@ -152,6 +152,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         item.querySelector('.open').removeAttribute('data-hide');
         item.querySelector('.close').setAttribute('data-hide', '');
         item.classList.remove('active');
+      }
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const targetObjects = [header.menuList, header.news, header.reset, header.updateTime,
+      header.menuBtn, header.menuBtn.firstChild];
+    if (!targetObjects.includes(event.target)) {
+      if (header.newsList.classList.contains('active')) {
+        header.newsList.classList.remove('active');
+      }
+      if (header.menuList.classList.contains('active')) {
+        header.menuList.classList.remove('active');
       }
     }
   });

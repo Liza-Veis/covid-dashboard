@@ -60,6 +60,7 @@ const Keyboard = {
     });
 
     document.addEventListener('keydown', event => {
+      if (this.elements.main.classList.contains('keyboard--hidden')) return;
       event.stopPropagation();
       if (event.key === 'Shift') {
         if (this.properties.pressed) return;
@@ -298,6 +299,7 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             this.close();
             this.triggerEvent('onclose');
+            this.opened = false;
           });
 
           break;
@@ -521,7 +523,6 @@ const Keyboard = {
   },
 
   close() {
-    this.properties.value = '';
     this.eventHandlers.oninput = oninput;
     this.eventHandlers.onclose = onclose;
     this.elements.main.classList.add('keyboard--hidden');
