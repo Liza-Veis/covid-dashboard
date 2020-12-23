@@ -347,7 +347,7 @@ footer.innerHTML = `
 <a class="footer__logo" href="https://rs.school/js/"><img src="assets/images/logo.png" alt="RS-School"></a>
 <div class="footer__text">Made by
 <a href="https://github.com/ParfenenkovEdit">@ParfenenkovEdit</a> and
-<a href="https://github.com/Liza-Veis">@Liza-Veis in 2020</a>
+<a href="https://github.com/Liza-Veis">@Liza-Veis</a> in 2020
 </div>
 `;
 

@@ -193,6 +193,9 @@ body {
     text-decoration: none;
     color: lighten($main-color, 5%);
   }
+  &__text {
+    text-align: center;
+  }
 }
 
 .main {
@@ -417,6 +420,7 @@ body {
   width: 80%;
   font-size: 1.125rem;
   padding: 5px 0;
+  max-width: 400px;
   border: none;
   outline: none;
   border-radius: 0;
@@ -567,7 +571,6 @@ option {
 
 .search__wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 100%;
   position: relative;
@@ -589,3 +592,5 @@ option {
 .keyboard {
   background: $body-bg-color;
 }
+
+@import './media.scss';
