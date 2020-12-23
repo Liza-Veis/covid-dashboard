@@ -210,6 +210,12 @@ body {
     text-decoration: none;
     color: lighten($main-color, 5%);
   }
+
+  &__last-update {
+    margin-right: 15px;
+    color: lighten($main-color, 5%);
+    font-size: 1rem;
+  }
 }
 
 .main {

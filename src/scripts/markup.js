@@ -346,6 +346,7 @@ const graph = new Graph();
 const header = new Header();
 
 footer.innerHTML = `
+<span class="footer__last-update"></span>
 <a class="footer__logo" href="https://rs.school/js/"><img src="assets/images/logo.png" alt="RS-School"></a>
 <div class="footer__text">Made by
 <a href="https://github.com/ParfenenkovEdit">@ParfenenkovEdit</a> and
