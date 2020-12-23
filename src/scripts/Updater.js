@@ -14,7 +14,7 @@ class Updater {
       await this.covidObj.init();
       await this.mapObj.setData(this.covidObj.getData());
       this.resetFunc(this.covidObj, this.mapObj, this.graphObj);
-    }, this.TimeInterval);
+    }, this.TimeInterval * 60000 * 60);
   }
 
   setNewInterval(interval) {

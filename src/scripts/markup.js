@@ -317,9 +317,13 @@ function Header() {
   this.news.textContent = 'Last news';
   this.reset.textContent = 'Show global data';
   this.updateTime.innerHTML = `
-  <option disabled selected>Select update data time</option><option value=60000>1 minute</option>
-  <option value=300000>5 minutes</option><option value=900000>15 minutes</option>
-  <option value=1800000>30 minutes</option><option value=3600000>1 hour</option>`;
+  <option disabled selected>Select update data time</option>
+  <option value=1>1 hour</option>
+  <option value=3>3 hours</option>
+  <option value=6>6 hours</option>
+  <option value=12>12 hours</option>
+  <option value=24>24 hours</option>`;
+
   this.menuBtn.append(burgerImage);
   this.menuList.append(this.news, this.reset, this.updateTime);
   this.elem.append(this.menuBtn, this.menuList, this.newsList);
