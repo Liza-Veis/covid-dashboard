@@ -1,0 +1,92 @@
+.popup {
+  user-select: none;
+  &__header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 5px;
+  }
+  &__close {
+    display: none;
+    position: absolute;
+    right: -15px;
+    top: -20px;
+    font-size: 25px;
+    color: #757575;
+    cursor: pointer;
+  }
+  &__flag {
+    width: 30px;
+    height: 20px;
+    margin-left: 10px;
+    box-shadow: 0 0 10px $font-color;
+  }
+  &__country {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  &__content {
+    font-size: 1rem;
+  }
+}
+
+.popup.active .popup__close {
+  display: block;
+}
+
+.leaflet-right {
+  display: flex;
+}
+
+.legend.leaflet-control {
+  margin-right: 58px;
+}
+
+.legend {
+  position: relative;
+  padding: 8px;
+  background-color: $parts-bg-color;
+  background-image: $gradient;
+  border: 1px solid $main-color;
+  cursor: pointer;
+  &__icon {
+    display: block;
+    width: 20px;
+    margin-left: auto;
+  }
+  &__content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    padding: inherit;
+    background-color: inherit;
+    border: $border;
+    cursor: default;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__circle-wrapper {
+    min-width: 45px;
+  }
+  &__circle {
+    border-radius: 50%;
+    margin: 0 auto;
+  }
+  &__value {
+    margin-left: 5px;
+    white-space: nowrap;
+  }
+
+  &.active .legend__content {
+    display: block;
+  }
+}

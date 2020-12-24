@@ -24,8 +24,8 @@ const optimization = () => {
 };
 
 const filename = (ext) => {
-  const extention = ext ? ext : '[ext]';
-  return isDev ? `[name].${extention}` : `[name].[contenthash].${extention}`;
+  const extension = ext || '[ext]';
+  return isDev ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 };
 
 const cssLoaders = (extra) => {
@@ -105,11 +105,11 @@ module.exports = {
         {
           from: path.resolve(__dirname, 'src/assets'),
           to: path.resolve(__dirname, 'dist/assets')
+        },
+        {
+          from: path.resolve(__dirname, 'src/favicon.svg'),
+          to: path.resolve(__dirname, 'dist')
         }
-      //   {
-      //     from: path.resolve(__dirname, 'src/favicon.ico'),
-      //     to: path.resolve(__dirname, 'dist')
-      //   }
       ]
     }),
     new MiniCssExtractPlugin({
