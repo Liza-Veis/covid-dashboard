@@ -14,7 +14,7 @@ class News {
   async createNewsList() {
     const data = await this.getNews();
     const fragment = document.createDocumentFragment();
-    const defaultImage = '../assets/images/default-news.jpg';
+    const defaultImage = './assets/images/default-news.jpg';
     data.forEach((item) => {
       const newsLink = document.createElement('a');
       newsLink.classList.add('news-link');
