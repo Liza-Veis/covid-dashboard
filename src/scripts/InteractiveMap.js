@@ -74,8 +74,8 @@ class InteractiveMap {
 
     this.markersStyle = {
       weight: 1,
-      fillColor: 'rgba(211,40,40,0.5)',
-      color: 'rgb(211,40,40)',
+      fillColor: 'rgba(240,63,131,0.5)',
+      color: 'rgb(240,63,131)',
       fillOpacity: 1
     };
 

@@ -1,5 +1,10 @@
 import Chart from 'chart.js';
 
+Chart.defaults.global.defaultFontColor = '#9d97a5';
+Chart.defaults.global.defaultFontFamily = '"Nunito", sans-serif';
+Chart.defaults.global.title.fontSize = 18;
+Chart.defaults.global.maintainAspectRatio = false;
+
 class DataChart {
   constructor(canvas) {
     this.canvas = canvas;
@@ -213,6 +218,7 @@ class DataChart {
     canvas.id = 'chart';
     oldCanvas.remove();
     this.canvas = canvas;
+    this.canvas.style.maxHeight = this.canvas.parentElement.offsetHeight - 45 + 'px';
   }
 }
 
