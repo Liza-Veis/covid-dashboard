@@ -64,6 +64,10 @@ class CovidDataMiner {
     }
   }
 
+  formatTime(time) {
+    return time < 10 ? `0${time}` : time;
+  }
+
   async setWorldData() {
     const response = await fetch('https://disease.sh/v3/covid-19/all');
     const data = await response.json();
@@ -74,9 +78,9 @@ class CovidDataMiner {
     this.countryRecoveredSelector.innerHTML = this.isTotal ? data.recovered : data.todayRecovered;
 
     const lastUpdate = DateTime.fromMillis(data.updated);
-    document.querySelector('.footer__last-update').textContent = `Last update:
-    ${lastUpdate.year}.${lastUpdate.month}.${lastUpdate.day}
-    in ${lastUpdate.hour}:${lastUpdate.minute}:${lastUpdate.second}`;
+    document.querySelector('.header__last-update').textContent = `Last update:
+    ${lastUpdate.year}.${this.formatTime(lastUpdate.month)}.${this.formatTime(lastUpdate.day)}
+	 in ${this.formatTime(lastUpdate.hour)}:${this.formatTime(lastUpdate.minute)}:${this.formatTime(lastUpdate.second)}`;
   }
 
   async resetSelectedCountry() {

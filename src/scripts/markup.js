@@ -94,6 +94,8 @@ function CountriesList() {
   <path d="M8.11557 12.4445H20.3378V14.2222H8.11557V12.4445Z" fill="currentColor"/>
   </svg>`;
 
+  this.search.setAttribute('autocomplete', 'off');
+
   this.changeOption = undefined;
 
   this.onOptionChange = (func) => {
@@ -305,16 +307,17 @@ function Graph() {
 
 function Header() {
   this.elem = create('header', 'header');
-  this.menuBtn = create('div', 'menu-button');
+  this.menuBtn = create('div', 'menu-icon');
   this.menuList = create('ul', 'menu-list');
   this.news = create('button', 'header__nav_news-btn');
   this.reset = create('li', 'menu-list__item');
   this.newsList = create('div', 'news-list');
   this.updateTime = create('select', 'menu-list__item', 'updater');
   this.nav = create('nav', 'header__nav');
-  const burgerImage = create('img', 'menu-icon', null, ['src', '../assets/icons/menu.svg']);
 
-  this.elem.innerHTML = '<span class="header__title">COVID-19 Dashboard</span>';
+  this.elem.innerHTML = `
+  <span class="header__title">COVID-19 Dashboard</span>
+  <span class="header__last-update"></span>`;
   this.news.textContent = 'Last news';
   this.reset.textContent = 'Show global data';
   this.updateTime.innerHTML = `
@@ -325,8 +328,8 @@ function Header() {
   <option value=12>12 hours</option>
   <option value=24>24 hours</option>`;
 
+  this.menuBtn.append(create('span'), create('span'), create('span'));
   this.nav.append(this.news, this.menuBtn);
-  this.menuBtn.append(burgerImage);
   this.menuList.append(this.reset, this.updateTime);
   this.elem.append(this.nav, this.menuList, this.newsList);
 }
@@ -346,11 +349,10 @@ const graph = new Graph();
 const header = new Header();
 
 footer.innerHTML = `
-<span class="footer__last-update"></span>
 <a class="footer__logo" href="https://rs.school/js/"><img src="assets/images/logo.png" alt="RS-School"></a>
 <div class="footer__text">Made by
 <a href="https://github.com/ParfenenkovEdit">@ParfenenkovEdit</a> and
-<a href="https://github.com/Liza-Veis">@Liza-Veis in 2020</a>
+<a href="https://github.com/Liza-Veis">@Liza-Veis</a> in 2020
 </div>
 `;
 

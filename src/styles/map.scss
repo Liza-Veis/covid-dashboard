@@ -39,6 +39,10 @@
   display: flex;
 }
 
+.legend.leaflet-control {
+  margin-right: 58px;
+}
+
 .legend {
   position: relative;
   padding: 8px;
