@@ -10,7 +10,6 @@ import { header, countriesList, statistics, graph, map } from './scripts/markup.
 
 document.addEventListener('DOMContentLoaded', async () => {
   const chart = new DataChart(graph.canvas);
-  chart.init();
   const interactiveMap = new InteractiveMap(map);
   const covid = new CovidDataMiner(
     countriesList.cases,
@@ -167,22 +166,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.addEventListener('click', (event) => {
-    const menuTargetObjects = [
-      header.menuList,
-      header.reset,
-      header.updateTime,
-      header.menuBtn,
-      header.menuBtn.firstChild
-    ];
+    const menuTargetObjects = [header.menuList, header.reset, header.updateTime];
     const newsTargetObjects = [header.news, header.newsList];
     if (!menuTargetObjects.includes(event.target)) {
-      if (header.menuList.classList.contains('active')) {
-        header.menuList.classList.remove('active');
-        header.menuBtn.classList.remove('active');
+      if (header.menuBtn.classList.contains('active') && event.target !== header.menuBtn) {
+        if ([...header.menuBtn.children].indexOf(event.target) === -1) {
+          header.menuList.classList.remove('active');
+          header.menuBtn.classList.remove('active');
+        }
       }
     }
     if (!newsTargetObjects.includes(event.target)) {
-      if (header.newsList.classList.contains('active')) {
+      if (header.newsList.classList.contains('active') && event.target !== header.newsBtn) {
         header.newsList.classList.remove('active');
       }
     }

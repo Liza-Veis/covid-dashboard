@@ -1,4 +1,5 @@
 @import '~normalize.css';
+@import '~leaflet/dist/leaflet.css';
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap');
 
 $font-family: 'Nunito', sans-serif;
@@ -415,6 +416,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 290px;
   &__footer {
     display: flex;
     justify-content: space-between;
@@ -425,7 +427,7 @@ body {
   }
   #chart {
     max-width: 100%;
-    padding: 10px;
+	 padding: 10px;
   }
   @include select();
 
@@ -577,6 +579,7 @@ body {
 .menu-list {
   list-style-type: none;
   display: none;
+  background: $body-bg-color;
   &.active {
     display: block;
     position: absolute;
