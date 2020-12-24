@@ -40,8 +40,8 @@ function Statistics() {
   const recoveredTitle = create('div', 'statistics__title');
 
   const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
-  <img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+  fullScreener.innerHTML = `<img src="assets/icons/fullscreen.svg" class="open">
+  <img src="assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   casesTitle.textContent = 'Cases';
   deathsTitle.textContent = 'Deaths';
@@ -125,8 +125,8 @@ function CountriesList() {
   const recovered = create('li', 'countries-list__option', null, ['data-value', 'recovered']);
 
   const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
-	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+  fullScreener.innerHTML = `<img src="assets/icons/fullscreen.svg" class="open">
+	<img src="assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   this.currentOption.classList.add('countries-list__option--current');
   btnLeft.classList.add('countries-list__btn--left');
@@ -223,8 +223,8 @@ function Graph() {
   const countryDaily = create('li', 'graph__option', null, ['data-value', 'country daily']);
 
   const fullScreener = create('div', 'fullscreen');
-  fullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
-	<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+  fullScreener.innerHTML = `<img src="assets/icons/fullscreen.svg" class="open">
+	<img src="assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 
   this.currentOption.classList.add('graph__option--current');
   btnLeft.classList.add('graph__btn--left');
@@ -339,8 +339,8 @@ const footer = create('footer', 'footer');
 
 const map = create('div', 'map');
 const mapFullScreener = create('div', 'fullscreen');
-mapFullScreener.innerHTML = `<img src="../assets/icons/fullscreen.svg" class="open">
-<img src="../assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
+mapFullScreener.innerHTML = `<img src="assets/icons/fullscreen.svg" class="open">
+<img src="assets/icons/exit-fullscreen.svg" class="close" data-hide >`;
 map.append(mapFullScreener);
 
 const statistics = new Statistics();

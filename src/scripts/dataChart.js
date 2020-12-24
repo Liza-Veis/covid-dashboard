@@ -1,4 +1,7 @@
 import Chart from 'chart.js';
+const moment = require('moment');
+
+moment.suppressDeprecationWarnings = true;
 
 Chart.defaults.global.defaultFontColor = '#9d97a5';
 Chart.defaults.global.defaultFontFamily = '"Nunito", sans-serif';
@@ -142,7 +145,6 @@ class DataChart {
 
   async init() {
     this.resetCanvas();
-
     const allData = await this.getGlobalData();
     const dataArray = Object.entries(allData.cases);
     const dataValues = [];
@@ -212,12 +214,14 @@ class DataChart {
   }
 
   resetCanvas() {
-    const oldCanvas = this.canvas;
-    const canvas = document.createElement('canvas');
-    this.canvas.replaceWith(canvas);
-    canvas.id = 'chart';
-    oldCanvas.remove();
-    this.canvas = canvas;
+    if (this.chart) {
+      const oldCanvas = this.canvas;
+      const canvas = document.createElement('canvas');
+      this.canvas.replaceWith(canvas);
+      canvas.id = 'chart';
+      oldCanvas.remove();
+      this.canvas = canvas;
+    }
     this.canvas.style.maxHeight = this.canvas.parentElement.offsetHeight - 45 + 'px';
   }
 }

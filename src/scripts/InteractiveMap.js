@@ -1,4 +1,3 @@
-import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import countriesGeoJson from '../assets/data/countriesGeo.json';
 
@@ -162,8 +161,10 @@ class InteractiveMap {
       state = 'daily';
     }
     this.state = state;
-    this.setMap(true);
-    this.updateLegend();
+    this.map.onload = () => {
+      this.setMap(true);
+      this.updateLegend();
+    };
   }
 
   closePopup(isNextCountrySelected) {
