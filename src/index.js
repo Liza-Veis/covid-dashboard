@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await searcher.init();
   await interactiveMap.init(covid.getData());
   Keyboard.init();
+  interactiveMap.map.invalidateSize();
 
   async function setDefault(covidObj, interactiveMapObj, graphObj) {
     await covidObj.resetSelectedCountry();

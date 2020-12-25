@@ -6,7 +6,9 @@ class News {
         'x-rapidapi-key': '4b8e988824msh7043d52316bc68ep1923c3jsn003143a0f07b',
         'x-rapidapi-host': 'covid-19-news.p.rapidapi.com'
       }
-    });
+    })
+      .then(res => res.ok ? res : Promise.reject(res))
+      .catch();
     const data = await response.json();
     return data.articles;
   }
@@ -15,6 +17,7 @@ class News {
     const data = await this.getNews();
     const fragment = document.createDocumentFragment();
     const defaultImage = './assets/images/default-news.jpg';
+    if (!data || data.length < 1) return undefined;
     data.forEach((item) => {
       const newsLink = document.createElement('a');
       newsLink.classList.add('news-link');
