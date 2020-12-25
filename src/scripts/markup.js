@@ -312,25 +312,77 @@ function Header() {
   this.news = create('button', 'header__nav_news-btn');
   this.reset = create('li', 'menu-list__item');
   this.newsList = create('div', 'news-list');
-  this.updateTime = create('select', 'menu-list__item', 'updater');
+  this.updateTime = create('div', 'header__option', 'updater', ['data-value', 1]);
   this.nav = create('nav', 'header__nav');
+
+  this.btnLeft = create('button', 'header__btn');
+  this.btnRight = create('button', 'header__btn');
+  this.selectTitle = create('span', 'header__select-title');
+
+  this.onOptionChange = (func) => {
+    if (func) {
+      this.onOptionChange = () => func(this.updateTime.dataset.value);
+    }
+  };
+
+  const options = {
+    1: '1 hour',
+    3: '3 hours',
+    6: '6 hours',
+    12: '12 hours',
+    24: '24 hours'
+  };
 
   this.elem.innerHTML = `
   <span class="header__title">COVID-19 Dashboard</span>
   <span class="header__last-update"></span>`;
   this.news.textContent = 'Last news';
   this.reset.textContent = 'Show global data';
-  this.updateTime.innerHTML = `
-  <option disabled selected>Select update data time</option>
-  <option value=1>1 hour</option>
-  <option value=3>3 hours</option>
-  <option value=6>6 hours</option>
-  <option value=12>12 hours</option>
-  <option value=24>24 hours</option>`;
+  this.updateTime.textContent = options[this.updateTime.dataset.value];
+
+  const selectLi = create('li', 'menu-list__item');
+  const selectBox = create('div', 'header__select');
+
+  this.selectTitle.textContent = 'Update time';
+  this.btnLeft.classList.add('header__btn--left');
+  this.btnRight.classList.add('header__btn--right');
+
+  const changeOption = (value) => {
+    if (this.updateTime.dataset.value === value[0]) return;
+    this.updateTime.textContent = value[1];
+    this.updateTime.dataset.value = value[0];
+    this.onOptionChange();
+  };
+
+  const getNextOption = (next) => {
+    const keysArray = [...Object.keys(options)];
+    const curIdx = keysArray.findIndex((elem) => elem === this.updateTime.dataset.value);
+    let idx = next ? (curIdx + 1) % keysArray.length : curIdx - 1;
+    if (idx < 0) idx = keysArray.length + idx;
+    return [keysArray[idx], options[keysArray[idx]]];
+  };
+
+  this.btnLeft.addEventListener('click', () => {
+    const value = getNextOption(false);
+    changeOption(value);
+  });
+
+  this.btnRight.addEventListener('click', () => {
+    const value = getNextOption(true);
+    changeOption(value);
+  });
+
+  this.updateTime.addEventListener('click', () => {
+    const value = getNextOption(true);
+    changeOption(value);
+  });
+
+  selectBox.append(this.btnLeft, this.updateTime, this.btnRight);
+  selectLi.append(this.selectTitle, selectBox);
 
   this.menuBtn.append(create('span'), create('span'), create('span'));
   this.nav.append(this.news, this.menuBtn);
-  this.menuList.append(this.reset, this.updateTime);
+  this.menuList.append(this.reset, selectLi);
   this.elem.append(this.nav, this.menuList, this.newsList);
 }
 

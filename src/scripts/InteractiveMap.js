@@ -161,10 +161,8 @@ class InteractiveMap {
       state = 'daily';
     }
     this.state = state;
-    this.map.onload = () => {
-      this.setMap(true);
-      this.updateLegend();
-    };
+    this.setMap(true);
+    this.updateLegend();
   }
 
   closePopup(isNextCountrySelected) {

@@ -47,9 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const updater = new Updater(covid, interactiveMap, graph, setDefault, 1);
   updater.init();
 
-  document.getElementById('updater').addEventListener('change', function () {
-    updater.setNewInterval(this.value);
-    this.blur();
+  header.onOptionChange((value) => {
+    updater.setNewInterval(value);
     header.menuList.classList.remove('active');
     header.menuBtn.classList.remove('active');
     if (header.newsList.classList.contains('active')) {
@@ -125,9 +124,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     header.newsList.classList.toggle('active');
   });
 
-  header.reset.addEventListener('click', async () => {
-    header.menuList.classList.remove('active');
-    header.menuBtn.classList.remove('active');
+  header.menuList.addEventListener('click', async (e) => {
+    if (e.target === header.reset) {
+      header.menuList.classList.remove('active');
+      header.menuBtn.classList.remove('active');
+    } else {
+      header.menuList.classList.add('active');
+      header.menuBtn.classList.add('active');
+    }
     if (header.newsList.classList.contains('active')) {
       header.newsList.classList.remove('active');
     }
@@ -155,6 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.addEventListener('fullscreenchange', () => {
+    chart.getDataByValue(graph.select.dataset.value);
     if (!document.fullscreenElement) {
       const item = document.querySelector('.fullscreen.active');
       if (item) {
@@ -166,18 +171,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.addEventListener('click', (event) => {
-    const menuTargetObjects = [header.menuList, header.reset, header.updateTime];
-    const newsTargetObjects = [header.news, header.newsList];
-    if (!menuTargetObjects.includes(event.target)) {
-      if (header.menuBtn.classList.contains('active') && event.target !== header.menuBtn) {
-        if ([...header.menuBtn.children].indexOf(event.target) === -1) {
-          header.menuList.classList.remove('active');
-          header.menuBtn.classList.remove('active');
-        }
+    const menuTargetObjects = [
+      header.menuBtn,
+      header.menuList,
+      header.reset,
+      header.updateTime,
+      header.menuList,
+      header.btnLeft,
+      header.btnRight,
+      header.selectTitle
+    ];
+    const newsTargetObjects = [header.news, header.newsList, header.newsBtn];
+    if (!menuTargetObjects.includes(event.target) && header.menuBtn.classList.contains('active')) {
+      if ([...header.menuBtn.children].indexOf(event.target) === -1) {
+        header.menuList.classList.remove('active');
+        header.menuBtn.classList.remove('active');
       }
     }
     if (!newsTargetObjects.includes(event.target)) {
-      if (header.newsList.classList.contains('active') && event.target !== header.newsBtn) {
+      if (header.newsList.classList.contains('active')) {
         header.newsList.classList.remove('active');
       }
     }

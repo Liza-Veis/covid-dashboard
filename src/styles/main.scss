@@ -173,7 +173,6 @@ body {
   &__nav {
     display: flex;
     align-items: center;
-
     &_news-btn {
       background-color: $body-bg-color;
       border: 1px solid $main-color;
@@ -181,7 +180,6 @@ body {
       padding: 5px 10px;
       cursor: pointer;
       transition: background-color 0.2s ease;
-
       &:active,
       &:focus {
         outline: none;
@@ -194,6 +192,33 @@ body {
   &__last-update {
     color: lighten($main-color, 5%);
     font-size: 1rem;
+  }
+  &__select {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: $main-color;
+  }
+  &__option {
+    min-width: 85px;
+  }
+  &__btn {
+    width: 20px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0;
+    border-top-width: 7px;
+    border-bottom-width: 7px;
+    outline: none;
+    cursor: pointer;
+    color: inherit;
+    &--left {
+      border-right: 7px solid currentColor;
+    }
+    &--right {
+      border-left: 7px solid currentColor;
+    }
   }
 }
 
@@ -427,7 +452,7 @@ body {
   }
   #chart {
     max-width: 100%;
-	 padding: 10px;
+    padding: 10px;
   }
   @include select();
 
@@ -580,6 +605,7 @@ body {
   list-style-type: none;
   display: none;
   background: $body-bg-color;
+  user-select: none;
   &.active {
     display: block;
     position: absolute;
@@ -590,11 +616,19 @@ body {
   &__item {
     padding: 10px;
     min-width: 150px;
+    display: flex;
     background: $body-bg-color;
-    color: $font-color-light;
-    cursor: pointer;
+    color: $font-color;
     text-align: center;
     border: $border;
+    border-top: none;
+    &:first-child {
+      border-top: $border;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 }
 
